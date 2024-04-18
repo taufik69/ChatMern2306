@@ -1,8 +1,8 @@
-import Registration from "./Component/Registration/Registration";
+import RegistrationPage from "./Pages/RegistrationPage";
 function App() {
   return (
     <>
-      <Registration />
+      <RegistrationPage />
     </>
   );
 }

@@ -1,6 +1,14 @@
 import React from "react";
 
-const Input = () => {
+const Input = ({
+  labelText,
+  inputType,
+  placeholderText,
+  id,
+  name,
+  className,
+  onChangeInput,
+}) => {
   return (
     <>
       <div className="my-10">
@@ -8,15 +16,16 @@ const Input = () => {
           htmlFor="email"
           className="font-semibold  text-[12px] text-dark-blue  opacity-50 font-Nunito"
         >
-          Email Address
+          {labelText}
         </label>
         <input
-          type="text"
-          placeholder="Ladushing691@gmail.com"
-          id="email"
-          name="email"
+          type={inputType}
+          placeholder={placeholderText}
+          id={id}
+          name={name}
           autoComplete="off"
-          className="w-full py-[22px] rounded-lg px-4 border-2 border-blue-200 font-Nunito"
+          className={className}
+          onChange={onChangeInput}
         />
       </div>
     </>

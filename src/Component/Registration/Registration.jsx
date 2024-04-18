@@ -1,10 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import Input from "../../CommonComponent/Input";
 import registrationImg from "../../assets/registration.png";
 
 const Registration = () => {
+  // all state in this page
+  const [Email, setEmail] = useState("");
+  const [FullName, setFullName] = useState("");
+  const [Password, setPassword] = useState("");
+
   const handleSubmit = (event) => {
     event.preventDefault();
+  };
+
+  const handleInput = (e) => {
+    if (e.target.id === "email") {
+      setEmail(e.target.value);
+    } else if (e.target.id === "FullName") {
+      setFullName(e.target.value);
+    } else {
+      setPassword(e.target.value);
+    }
+  };
+
+  const FullNamePattern = /^[a-zA-Z]/;
+  //  handleClick button functionality
+  const handleClick = () => {
+    if (!FullNamePattern.test(FullName)) {
+      console.log("kcion nai");
+    }
   };
   return (
     <>
@@ -18,44 +41,45 @@ const Registration = () => {
               Free register and you can enjoy it
             </p>
             <form onSubmit={handleSubmit}>
-              <Input />
+              <Input
+                labelText={"Email Address"}
+                inputType="text"
+                placeholderText={"Ladushing691@gmail.com"}
+                id={"email"}
+                name={"email"}
+                className={
+                  "w-full py-[22px] rounded-lg px-4 border-2 border-blue-200 font-Nunito"
+                }
+                onChangeInput={handleInput}
+              />
+              <Input
+                labelText={"Full name"}
+                inputType="text"
+                placeholderText={"Ladushing GTG"}
+                id={"FullName"}
+                name={"FullName"}
+                className={
+                  "w-full py-[22px] rounded-lg px-4 border-2 border-blue-200 font-Nunito"
+                }
+                onChangeInput={handleInput}
+              />
 
-              <div className="my-10">
-                <label
-                  htmlFor="fullname"
-                  className="font-semibold  text-[12px] text-dark-blue  opacity-50 font-Nunito"
-                >
-                  Full name
-                </label>
-                <input
-                  type="text"
-                  placeholder="Ladushing GTG"
-                  id="fullname"
-                  name="fullname"
-                  autoComplete="off"
-                  className="w-full py-[22px] rounded-lg px-4 border-2 border-blue-200 font-Nunito"
-                />
-              </div>
+              <Input
+                labelText={"Password"}
+                inputType="password"
+                placeholderText={"12234@#lkdfj"}
+                id={"password"}
+                name={"password"}
+                className={
+                  "w-full py-[22px] rounded-lg px-4 border-2 border-blue-200 font-Nunito"
+                }
+                onChangeInput={handleInput}
+              />
 
-              <div className="my-10">
-                <label
-                  htmlFor="Password"
-                  className="font-semibold  text-[12px] text-dark-blue  opacity-50 font-Nunito"
-                >
-                  Password
-                </label>
-                <input
-                  type="password"
-                  placeholder="12234@#lkdfj"
-                  id="Password"
-                  name="Password"
-                  autoComplete="off"
-                  className="w-full py-[22px] rounded-lg px-4 border-2 border-blue-200 font-Nunito"
-                />
-              </div>
               <button
                 type="submit"
                 className="w-full bg-btn-color py-5 rounded-full text-white text-xl font-normal font-Nunito"
+                onClick={handleClick}
               >
                 Sign up
               </button>

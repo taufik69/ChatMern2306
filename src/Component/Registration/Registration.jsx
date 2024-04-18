@@ -1,4 +1,5 @@
 import React from "react";
+import Input from "../../CommonComponent/Input";
 import registrationImg from "../../assets/registration.png";
 
 const Registration = () => {
@@ -17,22 +18,7 @@ const Registration = () => {
               Free register and you can enjoy it
             </p>
             <form onSubmit={handleSubmit}>
-              <div className="my-10">
-                <label
-                  htmlFor="email"
-                  className="font-semibold  text-[12px] text-dark-blue  opacity-50 font-Nunito"
-                >
-                  Email Address
-                </label>
-                <input
-                  type="text"
-                  placeholder="Ladushing691@gmail.com"
-                  id="email"
-                  name="email"
-                  autoComplete="off"
-                  className="w-full py-[22px] rounded-lg px-4 border-2 border-blue-200 font-Nunito"
-                />
-              </div>
+              <Input />
 
               <div className="my-10">
                 <label
@@ -78,7 +64,6 @@ const Registration = () => {
               <p className="text-[#03014C] font-sansSerif">
                 Already have an account ?{" "}
                 <span className="text-[#EA6C00] text-[18px] font-bold font-sansSerif align-middle hover:underline hover: decoration-indigo-500">
-                  {" "}
                   Sign In
                 </span>
               </p>

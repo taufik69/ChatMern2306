@@ -24,5 +24,11 @@
     display: inline-block;
     text-decoration: none;
   }
- 
+}
+
+@layer components {
+  .spinnerSignUp {
+    fill: red;
+    stroke: red;
+  }
 }

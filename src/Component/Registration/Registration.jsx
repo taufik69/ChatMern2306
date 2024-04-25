@@ -7,6 +7,7 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
+import { Link } from "react-router-dom";
 
 const Registration = () => {
   const auth = getAuth();
@@ -208,7 +209,7 @@ const Registration = () => {
               <p className="text-[#03014C] font-sansSerif">
                 Already have an account ?{" "}
                 <span className="text-[#EA6C00] text-[18px] font-bold font-sansSerif align-middle hover:underline hover: decoration-indigo-500">
-                  Sign In
+                  <Link to={"/login"}>Sign In</Link>
                 </span>
               </p>
             </div>

@@ -31,4 +31,8 @@
     fill: red;
     stroke: red;
   }
+
+  .custom-border {
+    border: 10px solid blue;
+  }
 }

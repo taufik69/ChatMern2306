@@ -7,10 +7,11 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Registration = () => {
   const auth = getAuth();
+  const navigate = useNavigate();
   const [Email, setEmail] = useState("");
   const [FullName, setFullName] = useState("");
   const [password, setpassword] = useState("");
@@ -78,6 +79,9 @@ const Registration = () => {
               theme: "light",
               transition: Bounce,
             });
+            setTimeout(() => {
+              navigate("/login");
+            }, 3000);
           });
         })
         .catch((error) => {

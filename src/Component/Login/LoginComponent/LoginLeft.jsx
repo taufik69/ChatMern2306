@@ -1,10 +1,18 @@
 import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaEyeSlash, FaRegEye } from "react-icons/fa";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { Link } from "react-router-dom";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
+import { Link, useNavigate } from "react-router-dom";
+
 const LoginLeft = () => {
   const auth = getAuth();
+  const provider = new GoogleAuthProvider();
+  const navigate = useNavigate();
   const [eye, setEye] = useState(false);
   const [loading, setloading] = useState(false);
 
@@ -68,14 +76,30 @@ const LoginLeft = () => {
       setloading(true);
       signInWithEmailAndPassword(auth, inputValue.email, inputValue.Password)
         .then((userinfo) => {
-          console.log(userinfo);
+          localStorage.setItem("UserToken", userinfo._tokenResponse.idToken);
+          navigate("/home");
         })
-        .error((err) => {
-          console.log(err);
+        .catch((err) => {
+          console.log(" login err", err);
         })
         .finally(() => {
           setloading(false);
         });
+    }
+  };
+
+  // HanldeLoginWithGoogle functionality implementaion
+  const HanldeLoginWithGoogle = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const user = result.user;
+
+      if (user) {
+        navigate("/home");
+      }
+    } catch (error) {
+      console.log(error.message);
     }
   };
 
@@ -85,7 +109,10 @@ const LoginLeft = () => {
         <h1 className="text-dark-blue font-bold text-4xl mb-[13px] font-Nunito">
           Login to your account!
         </h1>
-        <div className="flex items-center justify-center border-2 border-gray-200 py-5  w-[250px] rounded-2xl my-10">
+        <div
+          className="flex items-center justify-center border-2 border-gray-200 py-5  w-[250px] rounded-2xl my-10 cursor-pointer"
+          onClick={HanldeLoginWithGoogle}
+        >
           <div className="flex gap-x-2 items-center">
             <FcGoogle />
             <p className="text-[#03014C]  font-semibold text-[14px] font-sansSerif">

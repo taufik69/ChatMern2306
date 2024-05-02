@@ -1,5 +1,7 @@
+import Home from "./Pages/Home";
 import LoginPage from "./Pages/LoginPage";
 import RegistrationPage from "./Pages/RegistrationPage";
+import EmailVerified from "./Component/HomeConponent/EmailVerified";
 
 import {
   createBrowserRouter,
@@ -13,6 +15,8 @@ const router = createBrowserRouter(
     <Route>
       <Route path="/" element={<RegistrationPage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/home" element={<Home />} />
+      <Route path="/email-verified" element={<EmailVerified />} />
       <Route path="/*" element={<h1>Error page</h1>} />
     </Route>
   )

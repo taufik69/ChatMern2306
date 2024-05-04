@@ -12,8 +12,10 @@ const Home = () => {
     displayName: "",
     email: "",
   });
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
+      console.log(user);
       setuserInfo({
         ...userInfo,
         emailVerified: user.emailVerified,
@@ -21,7 +23,7 @@ const Home = () => {
         email: user.email,
       });
     });
-  }, []);
+  }, [userInfo.emailVerified]);
 
   return (
     <div>

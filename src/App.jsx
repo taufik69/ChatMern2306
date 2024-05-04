@@ -17,7 +17,6 @@ const router = createBrowserRouter(
       <Route path="/login" element={<LoginPage />} />
       <Route path="/home" element={<Home />} />
       <Route path="/email-verified" element={<EmailVerified />} />
-
       <Route path="/*" element={<h1>Error page</h1>} />
     </Route>,
   ),

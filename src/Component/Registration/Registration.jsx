@@ -7,11 +7,14 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   updateProfile,
+  onAuthStateChanged,
 } from "firebase/auth";
+import { getDatabase, ref, set, push } from "firebase/database";
 import { Link, useNavigate } from "react-router-dom";
 
 const Registration = () => {
   const auth = getAuth();
+  const db = getDatabase();
   const navigate = useNavigate();
   const [Email, setEmail] = useState("");
   const [FullName, setFullName] = useState("");
@@ -67,7 +70,6 @@ const Registration = () => {
       //  Sign up a new user
       createUserWithEmailAndPassword(auth, Email, password)
         .then((userCredential) => {
-          console.log(userCredential);
           sendEmailVerification(auth.currentUser).then(() => {
             toast("🦄 please Check Email Box", {
               position: "top-left",
@@ -81,15 +83,27 @@ const Registration = () => {
               transition: Bounce,
             });
             updateProfile(auth.currentUser, {
-              displayName: "Jane Q. User",
-              photoURL: "https://example.com/jane-q-user/profile.jpg",
-            }).then(() => {
-              console.log("profile update done");
-            });
-
+              displayName: FullName,
+            })
+              .then(() => {
+                let dbRef = ref(db, "users/");
+                set(push(dbRef), {
+                  username: auth.currentUser.displayName,
+                  email: auth.currentUser.email,
+                })
+                  .then(() => {
+                    console.log("data uploaded done on realtime db");
+                  })
+                  .catch((err) => {
+                    console.log("Database Write Failed");
+                  });
+              })
+              .catch((error) => {
+                console.log("error from update profile");
+              });
             setTimeout(() => {
               navigate("/login");
-            }, 3000);
+            }, 1000);
           });
         })
         .catch((error) => {

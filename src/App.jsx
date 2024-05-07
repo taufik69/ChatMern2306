@@ -1,6 +1,9 @@
 import Home from "./Pages/Home";
 import LoginPage from "./Pages/LoginPage";
 import RegistrationPage from "./Pages/RegistrationPage";
+import ChatPage from "./Pages/ChatPage";
+import NotificationPage from "./Pages/NotificationPage";
+import SettingsPage from "./Pages/SettingsPage";
 import EmailVerified from "./Component/HomeConponent/EmailVerified";
 
 import {
@@ -13,9 +16,13 @@ import {
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
-      <Route path="/" element={<RegistrationPage />} />
+      <Route path="/s" element={<RegistrationPage />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/home" element={<Home />} />
+      <Route path="/" element={<Home />}>
+        <Route path="/chat" element={<ChatPage />}></Route>
+        <Route path="/notification" element={<NotificationPage />}></Route>
+        <Route path="/settings" element={<SettingsPage />}></Route>
+      </Route>
       <Route path="/email-verified" element={<EmailVerified />} />
       <Route path="/*" element={<h1>Error page</h1>} />
     </Route>,

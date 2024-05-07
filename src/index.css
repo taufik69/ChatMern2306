@@ -25,14 +25,3 @@
     text-decoration: none;
   }
 }
-
-@layer components {
-  .spinnerSignUp {
-    fill: red;
-    stroke: red;
-  }
-
-  .custom-border {
-    border: 10px solid blue;
-  }
-}

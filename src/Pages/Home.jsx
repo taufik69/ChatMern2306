@@ -16,7 +16,6 @@ const Home = () => {
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      console.log(user);
       setuserInfo({
         ...userInfo,
         emailVerified: user.emailVerified,
@@ -30,7 +29,7 @@ const Home = () => {
     <div>
       {userInfo.emailVerified ? (
         <div className="flex p-7">
-          <HomeLeft active={"home"} />
+          <HomeLeft />
           <HomeRight />
         </div>
       ) : (

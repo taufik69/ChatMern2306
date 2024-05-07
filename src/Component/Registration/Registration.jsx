@@ -6,6 +6,7 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  updateProfile,
 } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -79,6 +80,13 @@ const Registration = () => {
               theme: "light",
               transition: Bounce,
             });
+            updateProfile(auth.currentUser, {
+              displayName: "Jane Q. User",
+              photoURL: "https://example.com/jane-q-user/profile.jpg",
+            }).then(() => {
+              console.log("profile update done");
+            });
+
             setTimeout(() => {
               navigate("/login");
             }, 3000);
@@ -110,21 +118,21 @@ const Registration = () => {
 
   return (
     <>
-      <div className="flex justify-between items-center">
+      <div className="flex items-center justify-between">
         <ToastContainer />
-        <div className="w-1/2 h-fullvh flex justify-center items-center">
+        <div className="flex h-fullvh w-1/2 items-center justify-center">
           <div>
-            <h1 className="text-dark-blue font-bold text-4xl mb-[13px] font-Nunito">
+            <h1 className="mb-[13px] font-Nunito text-4xl font-bold text-dark-blue">
               Get started with easily register
             </h1>
-            <p className="text-custom-black font-normal text-xl opacity-50 font-Nunito">
+            <p className="font-Nunito text-xl font-normal text-custom-black opacity-50">
               Free register and you can enjoy it
             </p>
             <form onSubmit={handleSubmit}>
               <div className="my-10">
                 <label
                   htmlFor="email"
-                  className="font-semibold  text-[12px] text-dark-blue  opacity-50 font-Nunito"
+                  className="font-Nunito  text-[12px] font-semibold  text-dark-blue opacity-50"
                 >
                   Email Address
                 </label>
@@ -135,11 +143,11 @@ const Registration = () => {
                   name="email"
                   value={Email}
                   autoComplete="off"
-                  className="w-full py-[22px] rounded-lg px-4 border-2 border-blue-200 font-Nunito"
+                  className="w-full rounded-lg border-2 border-blue-200 px-4 py-[22px] font-Nunito"
                   onChange={(event) => setEmail(event.target.value)}
                 />
                 {EmailError && (
-                  <span className="text-red-500 font-Nunito text-md font-normal mt-3 ml-1 block">
+                  <span className="text-md ml-1 mt-3 block font-Nunito font-normal text-red-500">
                     {EmailError}
                   </span>
                 )}
@@ -148,7 +156,7 @@ const Registration = () => {
               <div className="my-10">
                 <label
                   htmlFor="fullname"
-                  className="font-semibold  text-[12px] text-dark-blue  opacity-50 font-Nunito"
+                  className="font-Nunito  text-[12px] font-semibold  text-dark-blue opacity-50"
                 >
                   Full name
                 </label>
@@ -159,20 +167,20 @@ const Registration = () => {
                   name="fullname"
                   value={FullName}
                   autoComplete="off"
-                  className="w-full py-[22px] rounded-lg px-4 border-2 border-blue-200 font-Nunito"
+                  className="w-full rounded-lg border-2 border-blue-200 px-4 py-[22px] font-Nunito"
                   onChange={(event) => setFullName(event.target.value)}
                 />
                 {FullNameError && (
-                  <span className="text-red-500 font-Nunito text-md font-normal mt-3 ml-1 block">
+                  <span className="text-md ml-1 mt-3 block font-Nunito font-normal text-red-500">
                     {FullNameError}
                   </span>
                 )}
               </div>
 
-              <div className="my-10 relative">
+              <div className="relative my-10">
                 <label
                   htmlFor="Password"
-                  className="font-semibold  text-[12px] text-dark-blue  opacity-50 font-Nunito"
+                  className="font-Nunito  text-[12px] font-semibold  text-dark-blue opacity-50"
                 >
                   Password
                 </label>
@@ -183,16 +191,16 @@ const Registration = () => {
                   name="Password"
                   value={password}
                   autoComplete="off"
-                  className="w-full py-[22px] rounded-lg px-4 border-2 border-blue-200 font-Nunito"
+                  className="w-full rounded-lg border-2 border-blue-200 px-4 py-[22px] font-Nunito"
                   onChange={(event) => setpassword(event.target.value)}
                 />
                 {passwordError && (
-                  <span className="text-red-500 font-Nunito text-md font-normal mt-3 ml-1 block">
+                  <span className="text-md ml-1 mt-3 block font-Nunito font-normal text-red-500">
                     {passwordError}
                   </span>
                 )}
                 <div
-                  className="absolute top-1/2 right-8 translate-y-[50%] cursor-pointer"
+                  className="absolute right-8 top-1/2 translate-y-[50%] cursor-pointer"
                   onClick={HandleEye}
                 >
                   {eye ? <FaEyeSlash /> : <FaRegEye />}
@@ -200,30 +208,30 @@ const Registration = () => {
               </div>
               <button
                 type="submit"
-                className="w-full bg-btn-color py-5 rounded-full text-white text-xl font-normal font-Nunito relative"
+                className="relative w-full rounded-full bg-btn-color py-5 font-Nunito text-xl font-normal text-white"
                 onClick={HandleSignUp}
               >
                 {loading && (
-                  <div className="absolute left-[38%] top-[36%] h-5 w-5 bg-white rounded-full animate-spin border-t-4 border-b-4  border-cyan-500"></div>
+                  <div className="absolute left-[38%] top-[36%] h-5 w-5 animate-spin rounded-full border-b-4 border-t-4 border-cyan-500  bg-white"></div>
                 )}
                 Sign up
               </button>
             </form>
-            <div className="text-center mt-[35px]">
-              <p className="text-[#03014C] font-sansSerif">
+            <div className="mt-[35px] text-center">
+              <p className="font-sansSerif text-[#03014C]">
                 Already have an account ?{" "}
-                <span className="text-[#EA6C00] text-[18px] font-bold font-sansSerif align-middle hover:underline hover: decoration-indigo-500">
+                <span className="hover: align-middle font-sansSerif text-[18px] font-bold text-[#EA6C00] decoration-indigo-500 hover:underline">
                   <Link to={"/login"}>Sign In</Link>
                 </span>
               </p>
             </div>
           </div>
         </div>
-        <div className="w-1/2 bg-red-400  h-fullvh">
+        <div className="h-fullvh w-1/2  bg-red-400">
           <img
             src={registrationImg}
             alt={registrationImg}
-            className="min-w-full h-screen"
+            className="h-screen min-w-full"
           />
         </div>
       </div>

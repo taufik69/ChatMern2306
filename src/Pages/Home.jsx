@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+
 import EmailVerified from "../Component/HomeConponent/EmailVerified";
 import HomeLeft from "../Component/HomeConponent/HomeLeft/HomeLeft";
 import HomeRight from "../Component/HomeConponent/HomeRight/HomeRight";

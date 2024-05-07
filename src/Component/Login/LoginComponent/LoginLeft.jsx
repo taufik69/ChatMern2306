@@ -96,7 +96,7 @@ const LoginLeft = () => {
       const user = result.user;
 
       if (user) {
-        navigate("/home");
+        navigate("/");
       }
     } catch (error) {
       console.log(error.message);
@@ -104,18 +104,18 @@ const LoginLeft = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-[100vh] w-[55%]">
+    <div className="flex h-[100vh] w-[55%] items-center justify-center">
       <div className="">
-        <h1 className="text-dark-blue font-bold text-4xl mb-[13px] font-Nunito">
+        <h1 className="mb-[13px] font-Nunito text-4xl font-bold text-dark-blue">
           Login to your account!
         </h1>
         <div
-          className="flex items-center justify-center border-2 border-gray-200 py-5  w-[250px] rounded-2xl my-10 cursor-pointer"
+          className="my-10 flex w-[250px] cursor-pointer items-center justify-center  rounded-2xl border-2 border-gray-200 py-5"
           onClick={HanldeLoginWithGoogle}
         >
-          <div className="flex gap-x-2 items-center">
+          <div className="flex items-center gap-x-2">
             <FcGoogle />
-            <p className="text-[#03014C]  font-semibold text-[14px] font-sansSerif">
+            <p className="font-sansSerif  text-[14px] font-semibold text-[#03014C]">
               Login with Google
             </p>
           </div>
@@ -125,7 +125,7 @@ const LoginLeft = () => {
             <div className="my-10">
               <label
                 htmlFor="email"
-                className="font-semibold  text-[12px] text-dark-blue  opacity-50 font-Nunito"
+                className="font-Nunito  text-[12px] font-semibold  text-dark-blue opacity-50"
               >
                 Email Address
               </label>
@@ -136,20 +136,20 @@ const LoginLeft = () => {
                 name="email"
                 autoComplete="off"
                 value={inputValue.email}
-                className="w-full py-[22px] rounded-lg px-4 border-b-2 border-blue-200 font-Nunito"
+                className="w-full rounded-lg border-b-2 border-blue-200 px-4 py-[22px] font-Nunito"
                 onChange={HandleInputField}
               />
               {error.EmailError && (
-                <span className="text-red-500 font-Nunito text-md font-normal mt-3 ml-1 block">
+                <span className="text-md ml-1 mt-3 block font-Nunito font-normal text-red-500">
                   {error.EmailError}
                 </span>
               )}
             </div>
 
-            <div className="my-10 relative">
+            <div className="relative my-10">
               <label
                 htmlFor="Password"
-                className="font-semibold  text-[12px] text-dark-blue  opacity-50 font-Nunito"
+                className="font-Nunito  text-[12px] font-semibold  text-dark-blue opacity-50"
               >
                 Password
               </label>
@@ -160,17 +160,17 @@ const LoginLeft = () => {
                 name="Password"
                 value={inputValue.Password}
                 autoComplete="off"
-                className="w-full py-[22px] rounded-lg px-4 border-b-2 border-blue-200 font-Nunito"
+                className="w-full rounded-lg border-b-2 border-blue-200 px-4 py-[22px] font-Nunito"
                 onChange={HandleInputField}
               />
               {error.passwordError && (
-                <span className="text-red-500 font-Nunito text-md font-normal mt-3 ml-1 block">
+                <span className="text-md ml-1 mt-3 block font-Nunito font-normal text-red-500">
                   {error.passwordError}
                 </span>
               )}
 
               <div
-                className="absolute top-1/2 right-8 translate-y-[50%] cursor-pointer"
+                className="absolute right-8 top-1/2 translate-y-[50%] cursor-pointer"
                 onClick={() => setEye(!eye)}
               >
                 {eye ? <FaEyeSlash /> : <FaRegEye />}
@@ -178,11 +178,11 @@ const LoginLeft = () => {
             </div>
             <button
               type="submit"
-              className="w-full bg-btn-color py-5 rounded-xl text-white text-xl font-normal font-Nunito relative"
+              className="relative w-full rounded-xl bg-btn-color py-5 font-Nunito text-xl font-normal text-white"
               onClick={Handlelogin}
             >
               {loading && (
-                <div className="absolute left-[24%] top-[36%] h-5 w-5 bg-white rounded-full animate-spin border-t-4 border-b-4  border-cyan-500"></div>
+                <div className="absolute left-[24%] top-[36%] h-5 w-5 animate-spin rounded-full border-b-4 border-t-4 border-cyan-500  bg-white"></div>
               )}
               Login to Continue
             </button>
@@ -190,10 +190,10 @@ const LoginLeft = () => {
         </div>
 
         <div className="mt-5">
-          <p className="text-[#03014C] font-sansSerif font-normal text-lg">
+          <p className="font-sansSerif text-lg font-normal text-[#03014C]">
             Don’t have an account ?{" "}
-            <span className="text-[#EA6C00] font-bold text-xl cursor-pointer hover:underline">
-              <Link to={"/"}>Sign up</Link>
+            <span className="cursor-pointer text-xl font-bold text-[#EA6C00] hover:underline">
+              <Link to={"/registration"}>Sign up</Link>
             </span>
           </p>
         </div>

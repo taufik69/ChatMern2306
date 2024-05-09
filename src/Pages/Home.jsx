@@ -28,7 +28,7 @@ const Home = () => {
   return (
     <div>
       {userInfo.emailVerified ? (
-        <div className="flex p-7">
+        <div className="flex p-3">
           <HomeLeft />
           <HomeRight />
         </div>

@@ -12,7 +12,7 @@ const HomeLeft = () => {
   let active = location.pathname.split("/")[1];
   return (
     <div>
-      <div className=" h-[90vh] bg-btn-color   px-10  py-[38px]">
+      <div className=" h-[98vh] bg-btn-color   px-10  py-[38px]">
         <picture>
           <img src={profilePicture} alt={profilePicture} />
         </picture>

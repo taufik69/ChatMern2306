@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 
 const HomeRight = () => {
   return (
-    <div className="w-full bg-green-400">
+    <div className="w-full pl-7">
       <Outlet />
     </div>
   );

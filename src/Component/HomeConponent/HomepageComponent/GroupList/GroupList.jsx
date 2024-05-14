@@ -40,21 +40,20 @@ const GroupList = () => {
     },
   ];
   return (
-    <div>
-      <div className="">
+    <div className="w-[34%]">
+      <div className="mb-10">
         <Search className={"w-[427px]"} />
       </div>
 
-      <div className="scrollbar-thin scrollbar-thumb-sky-700  scrollbar-track-gray-400 mt-10  h-[347px] w-[427px] overflow-y-scroll  rounded-xl shadow-xl">
-        <div className="my-5 flex items-center justify-between px-3">
-          <h1 className="font-Poppins text-xl font-semibold text-custom-black">
-            Groups List
-          </h1>
-          <span>
-            <IoEllipsisVerticalSharp className="text-2xl text-btn-color" />
-          </span>
-        </div>
-
+      <div className="my-5 flex items-center justify-between">
+        <h1 className="font-Poppins text-xl font-semibold text-custom-black">
+          Groups List
+        </h1>
+        <span>
+          <IoEllipsisVerticalSharp className="text-2xl text-btn-color" />
+        </span>
+      </div>
+      <div className="mt-10 h-[347px]  w-full overflow-y-scroll  rounded-xl shadow-xl scrollbar-thin  scrollbar-track-gray-400 scrollbar-thumb-sky-700">
         <div className=" divide-y-[1px] divide-gray-200">
           {users?.map((item) => (
             <div className="flex items-center justify-between px-7 py-5">
@@ -78,7 +77,7 @@ const GroupList = () => {
               </div>
 
               <div>
-                <button className="font-Poppins rounded-lg bg-btn-color px-5 py-1 text-xl font-semibold text-white">
+                <button className="rounded-lg bg-btn-color px-5 py-1 font-Poppins text-xl font-semibold text-white">
                   {item.button}
                 </button>
               </div>

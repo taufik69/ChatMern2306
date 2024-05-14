@@ -1,6 +1,6 @@
 import React from "react";
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
-import Search from "../HomepageCommonComponent/Search";
+
 import profilePicture from "../../../../assets/HomepageImage/one.gif";
 import profilePictur2 from "../../../../assets/HomepageImage/two.gif";
 import profilePicture3 from "../../../../assets/HomepageImage/one.gif";
@@ -41,10 +41,6 @@ const GroupList = () => {
   ];
   return (
     <div className="w-[34%]">
-      <div className="mb-10">
-        <Search className={"w-[427px]"} />
-      </div>
-
       <div className="my-5 flex items-center justify-between">
         <h1 className="font-Poppins text-xl font-semibold text-custom-black">
           Groups List
@@ -77,7 +73,7 @@ const GroupList = () => {
               </div>
 
               <div>
-                <button className="rounded-lg bg-btn-color px-5 py-1 font-Poppins text-xl font-semibold text-white">
+                <button className="rounded-lg  bg-gradient-to-r from-violet-500 to-fuchsia-500 px-5 py-1 font-Poppins text-xl font-semibold text-white">
                   {item.button}
                 </button>
               </div>

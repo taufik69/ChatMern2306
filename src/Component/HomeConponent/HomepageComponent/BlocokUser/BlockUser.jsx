@@ -1,51 +1,45 @@
 import React from "react";
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
-import Search from "../HomepageCommonComponent/Search";
+import { FaPlus } from "react-icons/fa6";
 import friend1 from "../../../../assets/HomepageImage/Friends/f1.gif";
 import friend2 from "../../../../assets/HomepageImage/Friends/f2.gif";
 import friend3 from "../../../../assets/HomepageImage/Friends/f3.gif";
 import friend4 from "../../../../assets/HomepageImage/Friends/f4.png";
 import friend5 from "../../../../assets/HomepageImage/Friends/f5.png";
-
-const Friends = () => {
-  const Friends = [
+const BlockUser = () => {
+  const Blockuser = [
     {
       id: 1,
       image: friend1,
-      title: "Taufik ",
-      description: "Hi Guys, Wassup!",
-      active: true,
+      title: "Raghav ",
+      timeZone: "Today, 8:56pm",
     },
 
     {
       id: 2,
       image: friend3,
-      title: "Tawhid",
-      description: "Good to see you.",
-      active: true,
+      title: "Marvin McKinney ",
+      timeZone: "Yesterday, 8:56pm",
     },
 
     {
       id: 3,
       image: friend2,
-      title: "Shovo",
-      description: "What plans today?",
-      active: false,
+      title: "Tejeshwini C ",
+      timeZone: "Today, 12:22pm",
     },
 
     {
       id: 4,
       image: friend4,
-      title: "Moni",
-      description: "Lets Do Party",
-      active: true,
+      title: "Kiran ",
+      timeZone: "Yesterday, 8:56pm",
     },
     {
       id: 5,
       image: friend5,
-      title: "Thamina",
-      description: "Lets Do Party",
-      active: true,
+      title: "Swathi ",
+      timeZone: "Today, 2:31pm",
     },
   ];
   return (
@@ -53,15 +47,15 @@ const Friends = () => {
       <div className="w-[30%] self-end">
         <div className="my-5 flex items-center justify-between ">
           <h1 className="font-Poppins text-xl font-semibold text-custom-black">
-            Friends
+            User List
           </h1>
           <span>
-            <IoEllipsisVerticalSharp className="text-2xl text-btn-color" />
+            <IoEllipsisVerticalSharp className="animate-pulse text-2xl text-btn-color" />
           </span>
         </div>
-        <div className=" h-[347px] w-full  overflow-y-scroll  rounded-xl shadow-xl scrollbar-thin  scrollbar-track-gray-400 scrollbar-thumb-sky-700">
+        <div className="h-[347px]  w-full overflow-y-scroll  rounded-xl shadow-xl scrollbar-thin  scrollbar-track-gray-400 scrollbar-thumb-sky-700">
           <div className=" divide-y-[1px] divide-gray-200">
-            {Friends?.map((item) => (
+            {Blockuser?.map((item) => (
               <div
                 className="flex items-center justify-between px-7 py-5"
                 key={item.id}
@@ -74,27 +68,21 @@ const Friends = () => {
                       className="s-full h-full rounded-full object-cover shadow-lg"
                     />
                   </picture>
-                  {item.active && (
-                    <span class="absolute bottom-1 right-1 flex h-4 w-4">
-                      <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
-                      <span class="relative inline-flex h-4 w-4 rounded-full bg-green-500"></span>
-                    </span>
-                  )}
                 </div>
 
-                <div className="flex w-[45%]  flex-col items-start justify-center text-wrap   ">
+                <div className="flex w-[62%]  flex-col items-start justify-center text-wrap   ">
                   <h1 className="font-Poppins text-xl font-semibold text-custom-black">
                     {item.title ? item.title : "Name Xyz"}
                   </h1>
                   <p className="font-Poppins text-[18px] font-medium text-[#4D4D4D] opacity-75">
-                    {item.description ? item.description : "hello xyz"}
+                    {item.timeZone ? item.timeZone : "Yesterday, 6:22pm"}
                   </p>
                 </div>
 
                 <div>
-                  <p className="font-Poppins text-lg text-custom-black opacity-50">
-                    Today, 8:56pm
-                  </p>
+                  <button className="rounded-md bg-gradient-to-r from-[#614385] to-[#1D2B64]  px-3 py-2 font-bold text-white">
+                    unblock
+                  </button>
                 </div>
               </div>
             ))}
@@ -105,4 +93,4 @@ const Friends = () => {
   );
 };
 
-export default Friends;
+export default BlockUser;

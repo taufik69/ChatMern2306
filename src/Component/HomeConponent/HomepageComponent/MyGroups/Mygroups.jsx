@@ -1,4 +1,5 @@
 import React from "react";
+
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import Search from "../HomepageCommonComponent/Search";
 import friend1 from "../../../../assets/HomepageImage/Friends/f1.gif";
@@ -6,15 +7,14 @@ import friend2 from "../../../../assets/HomepageImage/Friends/f2.gif";
 import friend3 from "../../../../assets/HomepageImage/Friends/f3.gif";
 import friend4 from "../../../../assets/HomepageImage/Friends/f4.png";
 import friend5 from "../../../../assets/HomepageImage/Friends/f5.png";
-
-const Friends = () => {
-  const Friends = [
+const Mygroups = () => {
+  const myGroups = [
     {
       id: 1,
       image: friend1,
       title: "Taufik ",
       description: "Hi Guys, Wassup!",
-      active: true,
+      active: false,
     },
 
     {
@@ -45,7 +45,7 @@ const Friends = () => {
       image: friend5,
       title: "Thamina",
       description: "Lets Do Party",
-      active: true,
+      active: false,
     },
   ];
   return (
@@ -53,7 +53,7 @@ const Friends = () => {
       <div className="w-[30%] self-end">
         <div className="my-5 flex items-center justify-between ">
           <h1 className="font-Poppins text-xl font-semibold text-custom-black">
-            Friends
+            My Groups
           </h1>
           <span>
             <IoEllipsisVerticalSharp className="text-2xl text-btn-color" />
@@ -61,7 +61,7 @@ const Friends = () => {
         </div>
         <div className=" h-[347px] w-full  overflow-y-scroll  rounded-xl shadow-xl scrollbar-thin  scrollbar-track-gray-400 scrollbar-thumb-sky-700">
           <div className=" divide-y-[1px] divide-gray-200">
-            {Friends?.map((item) => (
+            {myGroups?.map((item) => (
               <div
                 className="flex items-center justify-between px-7 py-5"
                 key={item.id}
@@ -105,4 +105,4 @@ const Friends = () => {
   );
 };
 
-export default Friends;
+export default Mygroups;

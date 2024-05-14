@@ -6,17 +6,17 @@ const Search = ({ className }) => {
     <>
       <div className={`relative ${className}`}>
         <input
-          className={`${className} rounded-2xl  py-3 pl-14 shadow-xl placeholder:text-xl`}
+          className={`${className} rounded-2xl bg-[#E8F0FE]  py-3 pl-14 shadow-xl placeholder:text-xl`}
           type="text"
           placeholder="search"
           name="search"
           id="search"
         />
-        <span className="absolute left-3 top-[49%] -translate-y-1/2 ">
+        <span className="absolute left-[1%] top-[50%] -translate-y-1/2 ">
           <IoSearch className="text-2xl" />
         </span>
 
-        <span className="absolute right-3 top-[40%] -translate-y-1/2 ">
+        <span className="absolute right-[3%] top-[45%] -translate-y-1/2 ">
           <IoEllipsisVerticalSharp className="text-2xl text-btn-color" />
         </span>
       </div>

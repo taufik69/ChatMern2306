@@ -69,7 +69,7 @@ const UserList = () => {
                 </picture>
               </div>
 
-              <div className="flex w-[40%]  flex-col items-start justify-center text-wrap   ">
+              <div className="flex w-[62%]  flex-col items-start justify-center text-wrap   ">
                 <h1 className="font-Poppins text-xl font-semibold text-custom-black">
                   {item.title ? item.title : "Name Xyz"}
                 </h1>

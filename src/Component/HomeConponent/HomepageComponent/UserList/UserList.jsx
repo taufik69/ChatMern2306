@@ -79,7 +79,7 @@ const UserList = () => {
               </div>
 
               <div>
-                <button className="rounded-md bg-gradient-to-r from-[#24C6DC] to-indigo-400  px-3 py-2 font-bold text-white">
+                <button className="rounded-md bg-gradient-to-r from-[#614385] to-[#1D2B64] px-3 py-2 font-bold text-white">
                   <FaPlus className="animate-pulse" />
                 </button>
               </div>

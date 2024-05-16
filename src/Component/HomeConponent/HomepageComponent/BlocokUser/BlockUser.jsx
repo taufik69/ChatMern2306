@@ -47,7 +47,7 @@ const BlockUser = () => {
       <div className="w-[30%] self-end">
         <div className="my-5 flex items-center justify-between ">
           <h1 className="font-Poppins text-xl font-semibold text-custom-black">
-            User List
+            Block List
           </h1>
           <span>
             <IoEllipsisVerticalSharp className="animate-pulse text-2xl text-btn-color" />

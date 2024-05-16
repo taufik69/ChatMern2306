@@ -90,6 +90,7 @@ const Registration = () => {
                 set(push(dbRef), {
                   username: auth.currentUser.displayName,
                   email: auth.currentUser.email,
+                  uid: auth.currentUser.uid,
                 })
                   .then(() => {
                     console.log("data uploaded done on realtime db");

@@ -91,7 +91,6 @@ const Registration = () => {
                   username: auth.currentUser.displayName,
                   email: auth.currentUser.email,
                   uid: auth.currentUser.uid,
-                  profile_picture: "",
                 })
                   .then(() => {
                     console.log("data uploaded done on realtime db");

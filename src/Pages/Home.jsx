@@ -13,6 +13,7 @@ const Home = () => {
     displayName: "",
     email: "",
   });
+  const [userIsVerified, setuserIsVerified] = useState(false);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -23,7 +24,7 @@ const Home = () => {
         email: user.email,
       });
     });
-  }, [userInfo.emailVerified]);
+  }, [userIsVerified]);
 
   return (
     <div className="h-[100vh] overflow-hidden">

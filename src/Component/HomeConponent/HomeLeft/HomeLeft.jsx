@@ -9,7 +9,9 @@ import { Link, useLocation } from "react-router-dom";
 import { Uploader } from "uploader";
 import { LuUploadCloud } from "react-icons/lu";
 import { getAuth, onAuthStateChanged, updateProfile } from "firebase/auth";
+import { getDatabase, ref, onValue , update } from "firebase/database";
 const HomeLeft = () => {
+  const db = getDatabase();
   const auth = getAuth();
   const location = useLocation();
   const [photUrl, setphotUrl] = useState("");
@@ -21,14 +23,16 @@ const HomeLeft = () => {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log(user.photoURL);
+        console.log(user.uid);
         setphotUrl(user.photoURL);
       }
     });
   }, [photUrl, realtime]);
 
-  console.log(photUrl);
 
+  useEffect(()=> {
+
+  },[])
   const HanldeUpload = () => {
     uploader
       .open({
@@ -42,6 +46,11 @@ const HomeLeft = () => {
             photoURL: files[0].fileUrl,
           }).then(() => {
             setrealtime(!realtime);
+            update(ref(db, "users/", auth.currentUser.uid), {
+              profile_picture: photUrl,
+            }).then(() => {
+              console.log("done");
+            });
           });
         }
       })
@@ -49,8 +58,6 @@ const HomeLeft = () => {
         console.error(err);
       });
   };
-
-  console.log(photUrl);
 
   let active = location.pathname.split("/")[1];
   return (

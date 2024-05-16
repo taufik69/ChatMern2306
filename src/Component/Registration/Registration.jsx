@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaRegEye, FaEyeSlash } from "react-icons/fa";
 import { ToastContainer, toast, Bounce } from "react-toastify";
 import registrationImg from "../../assets/registration.png";

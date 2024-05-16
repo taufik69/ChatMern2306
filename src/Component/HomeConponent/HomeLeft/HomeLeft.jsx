@@ -1,23 +1,129 @@
-import React from "react";
-import profilePicture from "../../../assets/homeLeft/profile.png";
+import React, { useEffect, useState } from "react";
+import { FiUploadCloud } from "react-icons/fi";
 import home from "../../../assets/homeLeft/home.gif";
 import el from "../../../assets/homeLeft/ell.gif";
 import bell from "../../../assets/homeLeft/bell.gif";
+import profilePic from "../../../assets/homeLeft/profilePic.gif";
 import { IoSettingsOutline } from "react-icons/io5";
 import { CiLogout } from "react-icons/ci";
 import { Link, useLocation } from "react-router-dom";
+import { Uploader } from "uploader";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getDatabase, ref, onValue, set } from "firebase/database";
 
 const HomeLeft = () => {
+  const auth = getAuth();
+  const db = getDatabase();
   const location = useLocation();
+  const [photoUrl, setphotoUrl] = useState("");
+  const [userInfo, setuserInfo] = useState([]);
+
   let active = location.pathname.split("/")[1];
+
+  const uploader = Uploader({
+    apiKey: "free",
+  });
+
+  // Get a users information using AuthProver
+
+  useEffect(() => {
+    const starCountRef = ref(db, "/users");
+    onValue(starCountRef, (snapshot) => {
+      let useInfo = [];
+      snapshot.forEach((item) => {
+        useInfo.push({
+          userKey: item.key,
+          email: item.val().email,
+          uid: item.val().uid,
+          username: item.val().username,
+        });
+      });
+      setuserInfo(useInfo);
+    });
+  }, []);
+
+  // HanldeProfileUpload funciton implementaiton
+  const HanldeProfileUpload = () => {
+    uploader
+      .open({
+        multi: false,
+        mimeTypes: ["image/*"],
+        editor: {
+          images: {
+            crop: true,
+            cropShape: "circ", // "rect" also supported.
+            cropRatio: 1 / 1, // "1" is enforced for "circ".
+          },
+        },
+      })
+      .then((files) => {
+        if (files.length === 0) {
+          console.log("No files selected.");
+        } else {
+          console.log("Files uploaded:");
+          setphotoUrl(files[0].fileUrl);
+          set(ref(db, "users/" + userInfo[0].userKey), {
+            profile_picture: files[0].fileUrl,
+          });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   return (
     <div className="my-4 ml-4">
       <div className=" h-[100vh] rounded-xl bg-gradient-to-r from-[#2b5876] to-[#4e4376] px-10 py-[38px]">
-        <picture>
-          <img src={profilePicture} alt={profilePicture} />
-        </picture>
-        <div className="mt-16 ">
+        {photoUrl ? (
+          <div
+            className="h-[100px] w-[100px] cursor-pointer rounded-full bg-white shadow-md "
+            onClick={HanldeProfileUpload}
+          >
+            <div className="relative flex h-full items-center justify-center rounded-full after:absolute after:left-0 after:top-0 after:h-[100px] after:w-[100px] after:rounded-full after:border-2  after:bg-[#0c080835] after:content-['']">
+              <picture>
+                <img
+                  src={photoUrl}
+                  alt={photoUrl}
+                  className="h-full w-full rounded-full object-cover"
+                />
+              </picture>
+              <span className="absolute z-10">
+                <FiUploadCloud className=" text-[30px] text-white" />
+              </span>
+            </div>
+          </div>
+        ) : (
+          <div
+            className="h-[100px] w-[100px] cursor-pointer rounded-full bg-white shadow-md "
+            onClick={HanldeProfileUpload}
+          >
+            <div className="relative flex h-full items-center justify-center rounded-full after:absolute after:left-0 after:top-0 after:h-[100px] after:w-[100px] after:rounded-full after:border-2  after:bg-[#0c080835] after:content-['']">
+              <picture>
+                <img
+                  src={profilePic}
+                  alt={profilePic}
+                  className="h-full w-full rounded-full object-cover"
+                />
+              </picture>
+              <span className="absolute z-10">
+                <FiUploadCloud className=" text-[30px] text-white" />
+              </span>
+            </div>
+          </div>
+        )}
+
+        <div className="mt-5">
           <ul className="flex flex-col items-center justify-center gap-y-10">
+            {userInfo.length > 0 && (
+              <h1 className="text-2xl font-bold text-white">
+                {userInfo[0].username
+                  ? userInfo[0].username.split(" ")[0].charAt(0).toUpperCase() +
+                    userInfo[0].username.split(" ")[0].slice(1)
+                  : null}
+              </h1>
+            )}
+
             <li
               className={
                 active === ""

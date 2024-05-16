@@ -77,7 +77,7 @@ const LoginLeft = () => {
       signInWithEmailAndPassword(auth, inputValue.email, inputValue.Password)
         .then((userinfo) => {
           localStorage.setItem("UserToken", userinfo._tokenResponse.idToken);
-          navigate("/home");
+          navigate("/");
         })
         .catch((err) => {
           console.log(" login err", err);

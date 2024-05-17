@@ -8,9 +8,11 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
+import { getDatabase, ref, set, push } from "firebase/database";
 
 const LoginLeft = () => {
   const auth = getAuth();
+  const db = getDatabase();
   const provider = new GoogleAuthProvider();
   const navigate = useNavigate();
   const [eye, setEye] = useState(false);
@@ -96,7 +98,22 @@ const LoginLeft = () => {
       const user = result.user;
 
       if (user) {
-        navigate("/");
+        const { localId, email, displayName, photoUrl } = user.reloadUserInfo;
+        console.log(photoUrl);
+        let dbRef = ref(db, "users/");
+        set(push(dbRef), {
+          username: displayName,
+          email,
+          uid: localId,
+          profile_picture: photoUrl,
+        })
+          .then(() => {
+            console.log("data uploaded done on realtime db");
+            navigate("/");
+          })
+          .catch((err) => {
+            console.log("Database Write Failed", err);
+          });
       }
     } catch (error) {
       console.log(error.message);

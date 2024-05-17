@@ -80,7 +80,7 @@ const FriendRequest = () => {
                 </div>
 
                 <div>
-                  <button className="rounded-md bg-gradient-to-r from-[#5C258D] to-[#4389A2] px-3 py-2 font-bold text-white transition-all hover:bg-gradient-to-l hover:from-[#134E5E] hover:to-[#71B280]">
+                  <button className="rounded-md bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-3 py-2 font-bold text-white transition-all hover:bg-gradient-to-l hover:from-[#134E5E] hover:to-[#71B280]">
                     Accept
                   </button>
                 </div>

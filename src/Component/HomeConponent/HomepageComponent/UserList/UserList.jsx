@@ -17,7 +17,7 @@ const UserList = () => {
       snapshot.forEach((item) => {
         // userArray.push(Object.assign(item.val(), { userKey: item.key }));
         if (item.val().uid !== auth.currentUser.uid) {
-          // userArray.push({ ...item.val(), userKey: item.key });
+          userArray.push({ ...item.val(), userKey: item.key });
         }
       });
       setUserList(userArray);

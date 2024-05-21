@@ -69,7 +69,7 @@ const Registration = () => {
       setFullNameError("");
       //  Sign up a new user
       createUserWithEmailAndPassword(auth, Email, password)
-        .then((userCredential) => {
+        .then(() => {
           sendEmailVerification(auth.currentUser).then(() => {
             toast("🦄 please Check Email Box", {
               position: "top-left",
@@ -92,6 +92,8 @@ const Registration = () => {
                   email: auth.currentUser.email,
                   uid: auth.currentUser.uid,
                   profile_picture: "",
+                  createdAtDate: new Date().toLocaleDateString(),
+                  careateTime: new Date().toLocaleTimeString(),
                 })
                   .then(() => {
                     console.log("data uploaded done on realtime db");

@@ -70,7 +70,6 @@ const HomeLeft = () => {
       });
   };
 
-  console.log(userInfo.profile_picture);
   return (
     <div className="my-4 ml-4">
       <div className=" h-[100vh] rounded-xl bg-gradient-to-r from-[#2b5876] to-[#4e4376] px-10 py-[38px]">

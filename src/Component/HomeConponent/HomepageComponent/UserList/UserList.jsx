@@ -1,8 +1,8 @@
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
-import { FaPlus } from "react-icons/fa6";
+import { FaMinus, FaPlus } from "react-icons/fa6";
 import friend from "../../../../assets/HomepageImage/Friends/f1.gif";
 import { useEffect, useState } from "react";
-import { getDatabase, ref, onValue, set } from "firebase/database";
+import { getDatabase, ref, onValue, set, push } from "firebase/database";
 import moment from "moment";
 import { getAuth } from "firebase/auth";
 const UserList = () => {
@@ -10,6 +10,8 @@ const UserList = () => {
   const db = getDatabase();
   // All state
   const [userList, setUserList] = useState([]);
+  const [rececntCurrentUser, setrececntCurrentUser] = useState({});
+  const [friendRequestUser, setfriendRequestUser] = useState([]);
   useEffect(() => {
     const UserDbRef = ref(db, "users/");
     onValue(UserDbRef, (snapshot) => {
@@ -18,6 +20,8 @@ const UserList = () => {
         // userArray.push(Object.assign(item.val(), { userKey: item.key }));
         if (item.val().uid !== auth.currentUser.uid) {
           userArray.push({ ...item.val(), userKey: item.key });
+        } else if (item.val().uid === auth.currentUser.uid) {
+          setrececntCurrentUser({ ...item.val(), userKey: item.key });
         }
       });
       setUserList(userArray);
@@ -31,17 +35,35 @@ const UserList = () => {
    * */
 
   const handleFriendRequest = (item) => {
-    set(ref(db, "FriendRequest/"), {
-      senderId: auth.currentUser.uid,
+    set(push(ref(db, "FriendRequest/")), {
+      senderUid: auth.currentUser.uid,
       senderEmail: auth.currentUser.email,
       senderName: auth.currentUser.displayName,
+      senderUserKey: rececntCurrentUser.userKey,
       reciverUid: item.uid,
       reciverName: item.username,
       reciverEmail: item.email,
       reciverUserKey: item.userKey,
+      createdAtDate: moment().format("MM/DD/YYYY, h:mm:ss a"),
     });
   };
 
+  /**
+   * todo : Fetch All Data from FriendRequst documents
+   * @param ({})
+   */
+  useEffect(() => {
+    const FriendRequestDbRef = ref(db, "FriendRequest/");
+    onValue(FriendRequestDbRef, (snapshot) => {
+      let freiendRequestArr = [];
+      snapshot.forEach((item) => {
+        freiendRequestArr.push(item.val().senderUid + item.val().reciverUid);
+      });
+      setfriendRequestUser(freiendRequestArr);
+    });
+  }, []);
+
+  console.log(friendRequestUser);
   return (
     <div className="w-[30%] self-end">
       <div className="my-5 flex items-center justify-between ">
@@ -75,15 +97,22 @@ const UserList = () => {
                     {item.username ? item.username : "Name Xyz"}
                   </h1>
                   <p className="font-Poppins text-[18px] font-medium text-[#4D4D4D] opacity-75">
-                    {moment(item.createdAtDate, "MMM DD YY").fromNow()}
+                    {moment(userList[0].createdAtDate).calendar()}
                   </p>
                 </div>
-
-                <div onClick={() => handleFriendRequest(item)}>
-                  <button className="rounded-md bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-3 py-2 font-bold text-white">
-                    <FaPlus className="animate-pulse" />
-                  </button>
-                </div>
+                {friendRequestUser.includes(auth.currentUser.uid + item.uid) ? (
+                  <div>
+                    <button className="rounded-md bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-3 py-2 font-bold text-white">
+                      <FaMinus className="animate-pulse" />
+                    </button>
+                  </div>
+                ) : (
+                  <div onClick={() => handleFriendRequest(item)}>
+                    <button className="rounded-md bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-3 py-2 font-bold text-white">
+                      <FaPlus className="animate-pulse" />
+                    </button>
+                  </div>
+                )}
               </div>
             ))
           ) : (

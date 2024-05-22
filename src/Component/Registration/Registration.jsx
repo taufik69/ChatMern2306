@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaRegEye, FaEyeSlash } from "react-icons/fa";
 import { ToastContainer, toast, Bounce } from "react-toastify";
 import registrationImg from "../../assets/registration.png";
+import moment from "moment";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -92,8 +93,7 @@ const Registration = () => {
                   email: auth.currentUser.email,
                   uid: auth.currentUser.uid,
                   profile_picture: "",
-                  createdAtDate: new Date().toLocaleDateString(),
-                  careateTime: new Date().toLocaleTimeString(),
+                  createdAtDate: moment().format("MM/DD/YYYY, h:mm:ss a"),
                 })
                   .then(() => {
                     console.log("data uploaded done on realtime db");

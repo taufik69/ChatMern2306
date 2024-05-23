@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaRegEye, FaEyeSlash } from "react-icons/fa";
-import { ToastContainer, toast, Bounce } from "react-toastify";
+import { toast, Bounce } from "react-toastify";
 import registrationImg from "../../assets/registration.png";
 import moment from "moment";
 import {
@@ -137,7 +137,6 @@ const Registration = () => {
   return (
     <>
       <div className="flex items-center justify-between">
-        <ToastContainer />
         <div className="flex h-fullvh w-1/2 items-center justify-center">
           <div>
             <h1 className="mb-[13px] font-Nunito text-4xl font-bold text-dark-blue">

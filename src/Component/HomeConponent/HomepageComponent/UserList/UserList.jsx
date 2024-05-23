@@ -40,6 +40,9 @@ const UserList = () => {
       senderEmail: auth.currentUser.email,
       senderName: auth.currentUser.displayName,
       senderUserKey: rececntCurrentUser.userKey,
+      profile_picture: auth.currentUser.photoURL
+        ? auth.currentUser.photoURL
+        : "",
       reciverUid: item.uid,
       reciverName: item.username,
       reciverEmail: item.email,

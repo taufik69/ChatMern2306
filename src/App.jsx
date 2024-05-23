@@ -6,7 +6,7 @@ import NotificationPage from "./Pages/NotificationPage";
 import SettingsPage from "./Pages/SettingsPage";
 import Homepage from "./Pages/Homepage";
 import EmailVerified from "./Component/HomeConponent/EmailVerified";
-
+import { ToastContainer } from "react-toastify";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -32,7 +32,12 @@ const router = createBrowserRouter(
 );
 
 function App() {
-  return <RouterProvider router={router}></RouterProvider>;
+  return (
+    <div>
+      <ToastContainer />
+      <RouterProvider router={router}></RouterProvider>;
+    </div>
+  );
 }
 
 export default App;

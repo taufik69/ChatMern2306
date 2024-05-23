@@ -2,9 +2,10 @@ import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa6";
 import pp from "../../../../assets/HomepageImage/two.gif";
 import { useEffect, useState } from "react";
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue , set , push } from "firebase/database";
 import moment from "moment/moment";
 import { getAuth } from "firebase/auth";
+
 const FriendRequest = () => {
   const db = getDatabase();
   const auth = getAuth();
@@ -29,7 +30,14 @@ const FriendRequest = () => {
       setFreiendRquestList(friendRequestBlankArr);
     });
   }, [db]);
-  return (
+
+  // 
+  const handleAcceptRequest = (item) => {
+    set(push(ref(db, 'Friends/')), {
+     ...item
+    });
+  }
+    return (
     <>
       <div className="w-[34%] self-end">
         <div className="my-5 flex items-center justify-between ">
@@ -78,9 +86,10 @@ const FriendRequest = () => {
                   </div>
 
                   <div className="flex items-center gap-x-4">
-                    <button className="rounded-md bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-3 py-2 font-bold text-white transition-all hover:bg-gradient-to-l hover:from-[#134E5E] hover:to-[#71B280]">
+                  <button className="rounded-md bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-3 py-2 font-bold text-white transition-all   hover:bg-gradient-to-l hover:from-[#134E5E] hover:to-[#71B280]"  onClick={() => handleAcceptRequest(item)}>
                       Accept
                     </button>
+                    
                     <button className="rounded-md bg-gradient-to-r from-[#ff6767] to-[#f80778]  px-3 py-2 font-bold text-white transition-all hover:bg-gradient-to-l hover:from-[#f96363] hover:to-[#d43394]">
                       Cancel
                     </button>

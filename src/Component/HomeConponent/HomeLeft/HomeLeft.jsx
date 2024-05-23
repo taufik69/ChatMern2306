@@ -8,19 +8,9 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { CiLogout } from "react-icons/ci";
 import { Link, useLocation } from "react-router-dom";
 import { Uploader } from "uploader";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import {
-  getDatabase,
-  ref,
-  onValue,
-  update,
-  query,
-  orderByValue,
-  orderByChild,
-  orderByKey,
-  get,
-  equalTo,
-} from "firebase/database";
+import { getAuth, onAuthStateChanged, updateProfile } from "firebase/auth";
+import { getDatabase, ref, onValue, update } from "firebase/database";
+import { toast, Bounce } from "react-toastify";
 
 const HomeLeft = () => {
   const auth = getAuth();
@@ -38,22 +28,17 @@ const HomeLeft = () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         const { uid } = user;
-        const dbRef = ref(db, "users");
-        onValue(dbRef, (snapshot) => {
+        const userDbRef = ref(db, "users/");
+        onValue(userDbRef, (snapshot) => {
           snapshot.forEach((item) => {
             if (item.val().uid === uid) {
-              setuserInfo(
-                Object.assign(item.val(), {
-                  userKey: item.key,
-                  profile_picture: item.val().profile_picture,
-                }),
-              );
+              setuserInfo(Object.assign(item.val(), { userKey: item.key }));
             }
           });
         });
       }
     });
-  }, [db]);
+  }, [db, auth]);
 
   // HanldeProfileUpload funciton implementaiton
   const HanldeProfileUpload = () => {
@@ -73,9 +58,28 @@ const HomeLeft = () => {
         if (files.length === 0) {
           console.log("No files selected.");
         } else {
-          const commentsRef = ref(db, `users/${userInfo.userKey}`);
-          update(commentsRef, {
+          const userDbRef = ref(db, `users/${userInfo.userKey}`);
+          update(userDbRef, {
             profile_picture: files[0].fileUrl,
+          }).then(() => {
+            updateProfile(auth.currentUser, {
+              photoURL: files[0].fileUrl,
+            }).then(() => {
+              toast.info(
+                `${auth.currentUser.displayName} profile picture update`,
+                {
+                  position: "top-right",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "light",
+                  transition: Bounce,
+                },
+              );
+            });
           });
         }
       })
@@ -127,13 +131,12 @@ const HomeLeft = () => {
 
         <div className="mt-5">
           <ul className="flex flex-col items-center justify-center gap-y-10">
-            {userInfo.username && (
-              <h1 className="text-2xl font-bold text-white">
-                {userInfo.username.slice(0, 1).toUpperCase() +
+            <h1 className="text-2xl font-bold text-white">
+              {userInfo.username &&
+                userInfo.username.slice(0, 1).toUpperCase() +
                   userInfo.username.slice(1, 6)}
-                ..
-              </h1>
-            )}
+              ..
+            </h1>
 
             <li
               className={

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { FaRegEye, FaEyeSlash } from "react-icons/fa";
-import { ToastContainer, toast, Bounce } from "react-toastify";
+import { toast, Bounce } from "react-toastify";
 import registrationImg from "../../assets/registration.png";
+import moment from "moment";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -69,7 +70,7 @@ const Registration = () => {
       setFullNameError("");
       //  Sign up a new user
       createUserWithEmailAndPassword(auth, Email, password)
-        .then((userCredential) => {
+        .then(() => {
           sendEmailVerification(auth.currentUser).then(() => {
             toast("🦄 please Check Email Box", {
               position: "top-left",
@@ -91,6 +92,8 @@ const Registration = () => {
                   username: auth.currentUser.displayName,
                   email: auth.currentUser.email,
                   uid: auth.currentUser.uid,
+                  profile_picture: "",
+                  createdAtDate: moment().format("MM/DD/YYYY, h:mm:ss a"),
                 })
                   .then(() => {
                     console.log("data uploaded done on realtime db");
@@ -134,7 +137,6 @@ const Registration = () => {
   return (
     <>
       <div className="flex items-center justify-between">
-        <ToastContainer />
         <div className="flex h-fullvh w-1/2 items-center justify-center">
           <div>
             <h1 className="mb-[13px] font-Nunito text-4xl font-bold text-dark-blue">

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import Search from "../HomepageCommonComponent/Search";
 import friend1 from "../../../../assets/HomepageImage/Friends/f1.gif";
@@ -6,8 +6,9 @@ import friend2 from "../../../../assets/HomepageImage/Friends/f2.gif";
 import friend3 from "../../../../assets/HomepageImage/Friends/f3.gif";
 import friend4 from "../../../../assets/HomepageImage/Friends/f4.png";
 import friend5 from "../../../../assets/HomepageImage/Friends/f5.png";
-
+import { getDatabase, ref, onValue , set , push } from "firebase/database";
 const Friends = () => {
+  const db = getDatabase();
   const Friends = [
     {
       id: 1,
@@ -48,6 +49,20 @@ const Friends = () => {
       active: true,
     },
   ];
+
+  /**
+   * todo : fetch all friend in friends database
+   * 
+   */
+
+  useEffect(()=> {
+    const friendsDbRef =  ref(db, "Friends/");
+    onValue(friendsDbRef , (snapshot)=> {
+      snapshot.forEach((item)=> {
+        console.log(item.val());
+      })
+    })
+  }, [])
   return (
     <>
       <div className="w-[30%] self-end">

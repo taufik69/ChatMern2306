@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaRegEye, FaEyeSlash } from "react-icons/fa";
-import { ToastContainer, toast, Bounce } from "react-toastify";
+import { toast, Bounce } from "react-toastify";
 import registrationImg from "../../assets/registration.png";
 import moment from "moment";
 import {
@@ -8,7 +8,6 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   updateProfile,
-  onAuthStateChanged,
 } from "firebase/auth";
 import { getDatabase, ref, set, push } from "firebase/database";
 import { Link, useNavigate } from "react-router-dom";
@@ -137,7 +136,6 @@ const Registration = () => {
   return (
     <>
       <div className="flex items-center justify-between">
-        <ToastContainer />
         <div className="flex h-fullvh w-1/2 items-center justify-center">
           <div>
             <h1 className="mb-[13px] font-Nunito text-4xl font-bold text-dark-blue">

@@ -13,7 +13,7 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-
+import { ToastContainer } from "react-toastify";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
@@ -32,7 +32,12 @@ const router = createBrowserRouter(
 );
 
 function App() {
-  return <RouterProvider router={router}></RouterProvider>;
+  return (
+    <div>
+      <ToastContainer />
+      <RouterProvider router={router}></RouterProvider>;
+    </div>
+  );
 }
 
 export default App;

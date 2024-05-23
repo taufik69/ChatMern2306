@@ -8,9 +8,10 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { CiLogout } from "react-icons/ci";
 import { Link, useLocation } from "react-router-dom";
 import { Uploader } from "uploader";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, updateProfile } from "firebase/auth";
 import { getDatabase, ref, onValue, update } from "firebase/database";
-import moment from "moment";
+import { toast, Bounce } from "react-toastify";
+
 const HomeLeft = () => {
   const auth = getAuth();
   const db = getDatabase();
@@ -47,6 +48,7 @@ const HomeLeft = () => {
       .open({
         multi: false,
         mimeTypes: ["image/*"],
+        size: 1024 * 20,
         editor: {
           images: {
             crop: true,
@@ -62,6 +64,22 @@ const HomeLeft = () => {
           const userDbRef = ref(db, `users/${userInfo.userKey}`);
           update(userDbRef, {
             profile_picture: files[0].fileUrl,
+          }).then(() => {
+            updateProfile(auth.currentUser, {
+              profile_picture: files[0].fileUrl,
+            }).then(() => {
+              toast("Profile Update done", {
+                position: "top-left",
+                autoClose: false,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+              });
+            });
           });
         }
       })

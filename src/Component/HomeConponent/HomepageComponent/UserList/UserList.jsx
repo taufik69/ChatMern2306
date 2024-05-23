@@ -2,7 +2,14 @@ import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import { FaMinus, FaPlus } from "react-icons/fa6";
 import friend from "../../../../assets/HomepageImage/Friends/f1.gif";
 import { useEffect, useState } from "react";
-import { getDatabase, ref, onValue, set, push } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  onValue,
+  set,
+  push,
+  remove,
+} from "firebase/database";
 import moment from "moment";
 import { getAuth } from "firebase/auth";
 const UserList = () => {
@@ -40,6 +47,9 @@ const UserList = () => {
       senderEmail: auth.currentUser.email,
       senderName: auth.currentUser.displayName,
       senderUserKey: rececntCurrentUser.userKey,
+      Sender_profile_picture: auth.currentUser.photoURL
+        ? auth.currentUser.photoURL
+        : "",
       reciverUid: item.uid,
       reciverName: item.username,
       reciverEmail: item.email,
@@ -47,6 +57,7 @@ const UserList = () => {
       createdAtDate: moment().format("MM/DD/YYYY, h:mm:ss a"),
     });
   };
+  console.log(auth.currentUser.photoURL);
 
   /**
    * todo : Fetch All Data from FriendRequst documents
@@ -63,7 +74,18 @@ const UserList = () => {
     });
   }, []);
 
-  console.log(friendRequestUser);
+  /**
+   * todo  :Fetch a fetch a firendRequest Data
+   */
+
+  useEffect(() => {}, []);
+  /**
+   * todo : HanldeCancelFriednRequet Funtionality
+   * @param {{item}}
+   */
+  const HanldeCancelFriednRequet = (item) => {
+    remove(db, `FriendRequest/${item.userKey}`);
+  };
   return (
     <div className="w-[30%] self-end">
       <div className="my-5 flex items-center justify-between ">
@@ -101,7 +123,7 @@ const UserList = () => {
                   </p>
                 </div>
                 {friendRequestUser.includes(auth.currentUser.uid + item.uid) ? (
-                  <div>
+                  <div onClick={() => HanldeCancelFriednRequet(item)}>
                     <button className="rounded-md bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-3 py-2 font-bold text-white">
                       <FaMinus className="animate-pulse" />
                     </button>

@@ -47,7 +47,7 @@ const BlockUser = () => {
       <div className="w-[30%] self-end">
         <div className="my-5 flex items-center justify-between ">
           <h1 className="font-Poppins text-xl font-semibold text-custom-black">
-            User List
+            Block List
           </h1>
           <span>
             <IoEllipsisVerticalSharp className="animate-pulse text-2xl text-btn-color" />
@@ -80,7 +80,7 @@ const BlockUser = () => {
                 </div>
 
                 <div>
-                  <button className="rounded-md bg-gradient-to-r from-[#614385] to-[#1D2B64]  px-3 py-2 font-bold text-white">
+                  <button className="rounded-md bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-3 py-2 font-bold text-white">
                     unblock
                   </button>
                 </div>

@@ -73,7 +73,11 @@ const GroupList = () => {
               </div>
 
               <div>
+<<<<<<< HEAD
                 <button className="rounded-lg  bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-5 py-1 font-Poppins text-xl font-semibold text-white">
+=======
+                <button className="rounded-lg bg-gradient-to-r  from-[#614385] to-[#1D2B64]  px-5 py-1 font-Poppins text-xl font-semibold text-white">
+>>>>>>> 3631725c3230b5d34a59e685d20b6e030c905d4c
                   {item.button}
                 </button>
               </div>

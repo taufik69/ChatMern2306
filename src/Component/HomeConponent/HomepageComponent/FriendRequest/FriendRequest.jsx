@@ -38,7 +38,7 @@ const FriendRequest = () => {
     set(push(ref(db, 'Friends/')), {
      ...item
     }).then(()=> {
-      remove(db,'FriendRequest/'+item.friendReqUserKey)
+      // remove(db,`FriendRequest/${item.friendReqUserKey}`)
     })
   }
 

@@ -40,8 +40,6 @@ const HomeLeft = () => {
     });
   }, [db, auth]);
 
-  console.log(userInfo);
-
   // HanldeProfileUpload funciton implementaiton
   const HanldeProfileUpload = () => {
     uploader
@@ -66,19 +64,22 @@ const HomeLeft = () => {
             profile_picture: files[0].fileUrl,
           }).then(() => {
             updateProfile(auth.currentUser, {
-              profile_picture: files[0].fileUrl,
+              photoURL: files[0].fileUrl,
             }).then(() => {
-              toast("Profile Update done", {
-                position: "top-left",
-                autoClose: false,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-                transition: Bounce,
-              });
+              toast.info(
+                `${auth.currentUser.displayName} profile picture update`,
+                {
+                  position: "top-right",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "light",
+                  transition: Bounce,
+                },
+              );
             });
           });
         }

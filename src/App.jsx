@@ -6,14 +6,14 @@ import NotificationPage from "./Pages/NotificationPage";
 import SettingsPage from "./Pages/SettingsPage";
 import Homepage from "./Pages/Homepage";
 import EmailVerified from "./Component/HomeConponent/EmailVerified";
-
+import { ToastContainer } from "react-toastify";
 import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
   RouterProvider,
 } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>

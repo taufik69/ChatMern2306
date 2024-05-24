@@ -2,7 +2,7 @@ import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa6";
 import pp from "../../../../assets/HomepageImage/two.gif";
 import { useEffect, useState } from "react";
-import { getDatabase, ref, onValue , set , push } from "firebase/database";
+import { getDatabase, ref, onValue , set , push, remove } from "firebase/database";
 import moment from "moment/moment";
 import { getAuth } from "firebase/auth";
 
@@ -23,6 +23,7 @@ const FriendRequest = () => {
         if (item.val().reciverUid === auth.currentUser.uid) {
           friendRequestBlankArr.push({
             ...item.val(),
+            createdAtDate: moment().format("MM/DD/YYYY, h:mm:ss a"),
             friendReqUserKey: item.key,
           });
         }
@@ -33,10 +34,14 @@ const FriendRequest = () => {
 
   // 
   const handleAcceptRequest = (item) => {
+    console.log(item.friendReqUserKey);
     set(push(ref(db, 'Friends/')), {
      ...item
-    });
+    }).then(()=> {
+      remove(db,'FriendRequest/'+item.friendReqUserKey)
+    })
   }
+
     return (
     <>
       <div className="w-[34%] self-end">

@@ -9,6 +9,8 @@ import {
   set,
   push,
   remove,
+  orderByChild,
+  query,
 } from "firebase/database";
 import moment from "moment";
 import { getAuth } from "firebase/auth";
@@ -19,6 +21,7 @@ const UserList = () => {
   const [userList, setUserList] = useState([]);
   const [rececntCurrentUser, setrececntCurrentUser] = useState({});
   const [friendRequestUser, setfriendRequestUser] = useState([]);
+  const [isFriend, setisFriend] = useState([]);
   useEffect(() => {
     const UserDbRef = ref(db, "users/");
     onValue(UserDbRef, (snapshot) => {
@@ -57,7 +60,6 @@ const UserList = () => {
       createdAtDate: moment().format("MM/DD/YYYY, h:mm:ss a"),
     });
   };
-  console.log(auth.currentUser.photoURL);
 
   /**
    * todo : Fetch All Data from FriendRequst documents
@@ -75,17 +77,27 @@ const UserList = () => {
   }, []);
 
   /**
-   * todo  :Fetch a fetch a firendRequest Data
+   * todo  :Fetch a fetch a Friends Data
    */
 
-  useEffect(() => {}, []);
+  // useEffect(() => {
+  //   const FriendDbRef = ref(db, "Friends/");
+  //   onValue(FriendDbRef, (snapshot) => {
+  //     let FriendDbRefArr = [];
+  //     snapshot.forEach((item) => {
+  //       FriendDbRefArr.push(item.val().senderUid + item.val().reciverUid);
+  //     });
+  //     setisFriend(FriendDbRefArr);
+  //   });
+  // }, []);
+
   /**
    * todo : HanldeCancelFriednRequet Funtionality
    * @param {{item}}
    */
-  const HanldeCancelFriednRequet = (item) => {
-    remove(db, `FriendRequest/${item.userKey}`);
-  };
+
+  console.log(friendRequestUser[0]);
+
   return (
     <div className="w-[30%] self-end">
       <div className="my-5 flex items-center justify-between ">
@@ -122,6 +134,7 @@ const UserList = () => {
                     {moment(userList[0].createdAtDate).calendar()}
                   </p>
                 </div>
+
                 {friendRequestUser.includes(auth.currentUser.uid + item.uid) ? (
                   <div onClick={() => HanldeCancelFriednRequet(item)}>
                     <button className="rounded-md bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-3 py-2 font-bold text-white">

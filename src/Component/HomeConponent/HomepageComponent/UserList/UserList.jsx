@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { getDatabase, ref, onValue, set, push } from "firebase/database";
 import moment from "moment";
 import { getAuth } from "firebase/auth";
+import { toast, Slide } from "react-toastify";
 const UserList = () => {
   const auth = getAuth();
   const db = getDatabase();
@@ -48,6 +49,18 @@ const UserList = () => {
       reciverEmail: item.email,
       reciverUserKey: item.userKey,
       createdAtDate: moment().format("MM/DD/YYYY, h:mm:ss a"),
+    }).then(() => {
+      toast.success(`Friend Request sent to ${item.username} `, {
+        position: "top-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Slide,
+      });
     });
   };
 
@@ -66,7 +79,6 @@ const UserList = () => {
     });
   }, []);
 
-  console.log(friendRequestUser);
   return (
     <div className="w-[30%] self-end">
       <div className="my-5 flex items-center justify-between ">

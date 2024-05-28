@@ -26,7 +26,7 @@ const Home = () => {
   }, [userInfo.emailVerified]);
 
   return (
-    <div className="h-[100vh] overflow-hidden">
+    <div className="h-[100vh] ">
       {userInfo.emailVerified ? (
         <div className="flex ">
           <HomeLeft />

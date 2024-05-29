@@ -2,7 +2,15 @@ import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa6";
 import pp from "../../../../assets/HomepageImage/two.gif";
 import { useEffect, useState } from "react";
-
+import { toast, Slide } from "react-toastify";
+import {
+  getDatabase,
+  ref,
+  onValue,
+  set,
+  push,
+  remove,
+} from "firebase/database";
 import moment from "moment/moment";
 import { getAuth } from "firebase/auth";
 
@@ -41,19 +49,50 @@ const FriendRequest = () => {
     });
   }, [db]);
 
-  //
+  /**
+   * Todo: handleAcceptRequest funcitonality implementaion
+   * @param ({item})
+   */
   const handleAcceptRequest = (item) => {
+    console.log(item.friendReqUserKey);
     set(push(ref(db, "Friends/")), {
       ...item,
-    }).then(() => {
-      remove(ref(db, `FriendRequest/${item.friendReqUserKey}`));
-    });
+      createdAtDate: moment().format("MM/DD/YYYY, h:mm:ss a"),
+    })
+      .then(() => {
+        toast.success(`Aceptd Requst ${item.reciverName}`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Slide,
+        });
+      })
+      .then(() => {
+        const friendRequestDbRef = ref(
+          db,
+          `FriendRequest/${item.friendReqUserKey}`,
+        );
+        remove(friendRequestDbRef);
+      });
   };
+
   /**
-   * Todo: HandleCancel Funtionality
+   * Todo: HanldeCancelFriendRequest funcitonality implementaion
+   * @param ({item})
    */
 
- 
+  const HanldeCancelFriendRequest = (item) => {
+    const friendRequestDbRef = ref(
+      db,
+      `FriendRequest/${item.friendReqUserKey}`,
+    );
+    remove(friendRequestDbRef);
+  };
 
   return (
     <>
@@ -113,7 +152,7 @@ const FriendRequest = () => {
 
                     <button
                       className="rounded-md bg-gradient-to-r from-[#ff6767] to-[#f80778]  px-3 py-2 font-bold text-white transition-all hover:bg-gradient-to-l hover:from-[#f96363] hover:to-[#d43394]"
-                      onClick={() => HandleCancel(item)}
+                      onClick={() => HanldeCancelFriendRequest(item)}
                     >
                       Cancel
                     </button>

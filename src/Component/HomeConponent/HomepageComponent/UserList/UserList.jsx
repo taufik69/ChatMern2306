@@ -14,6 +14,7 @@ import {
 } from "firebase/database";
 import moment from "moment";
 import { getAuth } from "firebase/auth";
+import { toast, Slide } from "react-toastify";
 const UserList = () => {
   const auth = getAuth();
   const db = getDatabase();
@@ -58,6 +59,18 @@ const UserList = () => {
       reciverEmail: item.email,
       reciverUserKey: item.userKey,
       createdAtDate: moment().format("MM/DD/YYYY, h:mm:ss a"),
+    }).then(() => {
+      toast.success(`Friend Request sent to ${item.username} `, {
+        position: "top-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Slide,
+      });
     });
   };
 
@@ -75,28 +88,6 @@ const UserList = () => {
       setfriendRequestUser(freiendRequestArr);
     });
   }, []);
-
-  /**
-   * todo  :Fetch a fetch a Friends Data
-   */
-
-  // useEffect(() => {
-  //   const FriendDbRef = ref(db, "Friends/");
-  //   onValue(FriendDbRef, (snapshot) => {
-  //     let FriendDbRefArr = [];
-  //     snapshot.forEach((item) => {
-  //       FriendDbRefArr.push(item.val().senderUid + item.val().reciverUid);
-  //     });
-  //     setisFriend(FriendDbRefArr);
-  //   });
-  // }, []);
-
-  /**
-   * todo : HanldeCancelFriednRequet Funtionality
-   * @param {{item}}
-   */
-
-  console.log(friendRequestUser[0]);
 
   return (
     <div className="w-[30%] self-end">

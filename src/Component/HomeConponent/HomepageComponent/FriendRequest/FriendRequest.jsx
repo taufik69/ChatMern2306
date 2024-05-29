@@ -3,17 +3,9 @@ import { FaPlus } from "react-icons/fa6";
 import pp from "../../../../assets/HomepageImage/two.gif";
 import { useEffect, useState } from "react";
 import { toast, Slide } from "react-toastify";
-import {
-  getDatabase,
-  ref,
-  onValue,
-  set,
-  push,
-  remove,
-} from "firebase/database";
+
 import moment from "moment/moment";
 import { getAuth } from "firebase/auth";
-
 import {
   getDatabase,
   ref,

@@ -15,6 +15,8 @@ import {
 import moment from "moment";
 import { getAuth } from "firebase/auth";
 import { toast, Slide } from "react-toastify";
+import { FaUserFriends } from "react-icons/fa";
+import { AuthCredential } from "firebase/auth/cordova";
 const UserList = () => {
   const auth = getAuth();
   const db = getDatabase();
@@ -23,6 +25,7 @@ const UserList = () => {
   const [rececntCurrentUser, setrececntCurrentUser] = useState({});
   const [friendRequestUser, setfriendRequestUser] = useState([]);
   const [isFriend, setisFriend] = useState([]);
+
   useEffect(() => {
     const UserDbRef = ref(db, "users/");
     onValue(UserDbRef, (snapshot) => {
@@ -89,6 +92,21 @@ const UserList = () => {
     });
   }, []);
 
+  /**
+   * todo : Fetch All Data from FriendRequst documents
+   * @param ({})
+   */
+  useEffect(() => {
+    const FriendDbRef = ref(db, "Friends/");
+    onValue(FriendDbRef, (snapshot) => {
+      let FriendDbRefArr = [];
+      snapshot.forEach((item) => {
+        FriendDbRefArr.push(item.val().senderUid + item.val().reciverUserKey);
+      });
+      setisFriend(FriendDbRefArr);
+    });
+  }, []);
+
   return (
     <div className="w-[30%] self-end">
       <div className="my-5 flex items-center justify-between ">
@@ -125,9 +143,14 @@ const UserList = () => {
                     {moment(userList[0].createdAtDate).calendar()}
                   </p>
                 </div>
-
-                {friendRequestUser.includes(auth.currentUser.uid + item.uid) ? (
-                  <div onClick={() => HanldeCancelFriednRequet(item)}>
+                {isFriend.includes(auth.currentUser.uid + item.userKey) ? (
+                  <button className="rounded-md bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-3 py-2 font-bold text-white">
+                    <FaUserFriends className="animate-pulse" />
+                  </button>
+                ) : friendRequestUser.includes(
+                    auth.currentUser.uid + item.uid,
+                  ) ? (
+                  <div>
                     <button className="rounded-md bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-3 py-2 font-bold text-white">
                       <FaMinus className="animate-pulse" />
                     </button>

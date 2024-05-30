@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
-import Search from "../HomepageCommonComponent/Search";
 import friend1 from "../../../../assets/HomepageImage/Friends/f1.gif";
 import { FaUsers } from "react-icons/fa";
 import { toast, Slide } from "react-toastify";
@@ -18,15 +17,12 @@ const Friends = () => {
   const db = getDatabase();
   const auth = getAuth();
   const [friends, setfriends] = useState([]);
-
   /**
    * todo : fetch all friend in friends database
    *
    */
-
   useEffect(() => {
     const CurrentUid = auth.currentUser.uid;
-    console.log(CurrentUid);
     const friendsDbRef = ref(db, "Friends/");
     onValue(friendsDbRef, (snapshot) => {
       let frdblankArr = [];
@@ -42,7 +38,6 @@ const Friends = () => {
     });
   }, [auth.currentUser.uid, db]);
 
-  console.log(friends);
   /**
    * todo : HandleBlock functionality
    * @params ({items})
@@ -52,9 +47,10 @@ const Friends = () => {
       blockbyId: auth.currentUser.uid,
       blockbyName: auth.currentUser.displayName,
       blockByEmail: auth.currentUser.email,
-      whoBlock: item.friendKey,
+      whoBlock: item.senderUid,
       whoBlockName: item.senderName,
       whoBlockEmail: item.senderEmail,
+      whoBlockProfile_picture: item.profile_picture,
       createdAtDate: moment().format("MM/DD/YYYY, h:mm:ss a"),
     }).then(() => {
       remove(ref(db, "Friends/" + item.friendKey));
@@ -157,8 +153,7 @@ const Friends = () => {
                   class="mb-4 rounded-lg bg-blue-50 p-4 text-sm text-blue-800 dark:bg-gray-800 dark:text-blue-400"
                   role="alert"
                 >
-                  <span class="font-medium">Info alert!</span> No Friend
-                  Availavil here
+                  <span class="font-medium"></span> No Friend Availavil here
                 </div>
               </div>
             )}

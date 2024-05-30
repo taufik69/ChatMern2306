@@ -46,7 +46,7 @@ const FriendRequest = () => {
    * @param ({item})
    */
   const handleAcceptRequest = (item) => {
-    console.log(item.friendReqUserKey);
+
     set(push(ref(db, "Friends/")), {
       ...item,
       createdAtDate: moment().format("MM/DD/YYYY, h:mm:ss a"),

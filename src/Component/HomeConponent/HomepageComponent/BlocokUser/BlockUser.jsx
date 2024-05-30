@@ -13,6 +13,7 @@ import {
   push,
   remove,
 } from "firebase/database";
+import { FaUser } from "react-icons/fa";
 const BlockUser = () => {
   const db = getDatabase();
   const auth = getAuth();
@@ -39,12 +40,53 @@ const BlockUser = () => {
     });
   }, []);
 
+  /**
+   * todo : handleUnblock funtionality implementation
+   * Motive : unblock user
+   * @params ({item})
+   */
+
+  const handleUnblock = (item) => {
+    console.log(item);
+    set(push(ref(db, "Friends/")), {
+      senderUid: item.whoBlock,
+      senderName: item.whoBlockName,
+      senderEmail: item.whoBlockEmail,
+      reciverName: item.blockbyName,
+      reciverEmail: item.blockByEmail,
+      reciverUid: item.blockbyId,
+      profile_picture: item.whoBlockprofile_picture,
+      createdAtDate: moment().format("MM/DD/YYYY, h:mm:ss a"),
+    }).then(() => {
+      remove(ref(db, "block/" + item.blockUserkey));
+      toast.info(`${item.whoBlockName} unBlocked`, {
+        position: "top-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Slide,
+      });
+    });
+  };
+
   return (
     <>
       <div className="w-[30%] self-end">
         <div className="my-5 flex items-center justify-between ">
           <h1 className="font-Poppins text-xl font-semibold text-custom-black">
-            Block List
+            <button
+              type="button"
+              className="relative inline-flex items-center rounded-lg bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-5 py-2.5 text-center text-sm font-medium text-white "
+            >
+              <FaUser className="mr-2 text-2xl" /> Block List
+              <div className="absolute -end-2 -top-2 inline-flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-red-500 text-xs font-bold text-white dark:border-gray-900">
+                {BlockList.length > 0 ? BlockList.length : 0}
+              </div>
+            </button>
           </h1>
           <span>
             <IoEllipsisVerticalSharp className="animate-pulse text-2xl text-btn-color" />
@@ -90,7 +132,10 @@ const BlockUser = () => {
                   </div>
 
                   <div>
-                    <button className="rounded-md bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-3 py-2 font-bold text-white">
+                    <button
+                      className="rounded-md bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-3 py-2 font-bold text-white"
+                      onClick={() => handleUnblock(item)}
+                    >
                       unblock
                     </button>
                   </div>

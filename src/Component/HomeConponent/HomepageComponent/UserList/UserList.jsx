@@ -15,7 +15,7 @@ import {
 import moment from "moment";
 import { getAuth } from "firebase/auth";
 import { toast, Slide } from "react-toastify";
-import { FaUserFriends } from "react-icons/fa";
+import { FaUserFriends, FaUsers } from "react-icons/fa";
 import { AuthCredential } from "firebase/auth/cordova";
 const UserList = () => {
   const auth = getAuth();
@@ -111,7 +111,15 @@ const UserList = () => {
     <div className="w-[30%] self-end">
       <div className="my-5 flex items-center justify-between ">
         <h1 className="font-Poppins text-xl font-semibold text-custom-black">
-          User List
+          <button
+            type="button"
+            className="relative inline-flex items-center rounded-lg bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-5 py-2.5 text-center text-sm font-medium text-white "
+          >
+            <FaUsers className="mr-2 text-2xl" /> User Listt
+            <div className="absolute -end-2 -top-2 inline-flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-red-500 text-xs font-bold text-white dark:border-gray-900">
+              {userList.length > 0 ? userList.length : 0}
+            </div>
+          </button>
         </h1>
         <span>
           <IoEllipsisVerticalSharp className="animate-pulse text-2xl text-btn-color" />

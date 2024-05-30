@@ -1,11 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
-
 import profilePicture from "../../../../assets/HomepageImage/one.gif";
 import profilePictur2 from "../../../../assets/HomepageImage/two.gif";
 import profilePicture3 from "../../../../assets/HomepageImage/one.gif";
 import profilePicture4 from "../../../../assets/HomepageImage/two.gif";
+import Modal from "react-modal";
+import { ImCancelCircle } from "react-icons/im";
+
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    width: "30%",
+  },
+};
+
 const GroupList = () => {
+  const [modalIsOpen, setIsOpen] = useState(false);
+  function closeModal() {
+    setIsOpen(false);
+  }
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  /**
+   * futntion : HanldeOpenModal
+   *  @param: ({})
+   */
+
+  const HanldeOpenModal = () => {
+    openModal();
+  };
   const users = [
     {
       id: 1,
@@ -45,9 +75,13 @@ const GroupList = () => {
         <h1 className="font-Poppins text-xl font-semibold text-custom-black">
           Groups List
         </h1>
-        <span>
-          <IoEllipsisVerticalSharp className="text-2xl text-btn-color" />
-        </span>
+        <button
+          onClick={HanldeOpenModal}
+          type="button"
+          className="relative inline-flex items-center rounded-lg bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-5 py-2.5 text-center text-sm font-medium text-white "
+        >
+          Create Group
+        </button>
       </div>
       <div className="mt-10 h-[347px]  w-full overflow-y-scroll  rounded-xl shadow-xl scrollbar-thin  scrollbar-track-gray-400 scrollbar-thumb-sky-700">
         <div className=" divide-y-[1px] divide-gray-200">
@@ -81,6 +115,45 @@ const GroupList = () => {
           ))}
         </div>
       </div>
+
+      {/* modal body  */}
+      <Modal
+        isOpen={modalIsOpen}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        <div className="">
+          <button
+            onClick={() => closeModal()}
+            className="flex h-[34px]  w-[34px] items-center justify-center rounded-full  bg-red-500 text-center text-xl   text-white"
+          >
+            <ImCancelCircle />
+          </button>
+
+          <div>
+            <h1 className="flex justify-center py-8 font-Nunito text-3xl font-bold text-black">
+              Group Information
+            </h1>
+            <form action="#">
+              <div className="flex flex-col gap-y-3 ">
+                <label htmlFor="groupname">
+                  GroupName{" "}
+                  <span className="align-text-top text-red-500">*</span>
+                </label>
+                <input
+                  className="border-[1px] border-gray-200 p-3"
+                  type="text"
+                  id="groupname"
+                  name="groupname"
+                  placeholder="Group Name"
+                />
+              </div>
+            </form>
+          </div>
+        </div>
+      </Modal>
+
+      {/* modal body  */}
     </div>
   );
 };

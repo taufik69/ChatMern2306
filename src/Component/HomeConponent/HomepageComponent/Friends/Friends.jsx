@@ -26,7 +26,7 @@ const Friends = () => {
 
   useEffect(() => {
     const CurrentUid = auth.currentUser.uid;
-    console.log(CurrentUid);
+
     const friendsDbRef = ref(db, "Friends/");
     onValue(friendsDbRef, (snapshot) => {
       let frdblankArr = [];
@@ -42,19 +42,21 @@ const Friends = () => {
     });
   }, [auth.currentUser.uid, db]);
 
-  console.log(friends);
   /**
    * todo : HandleBlock functionality
    * @params ({items})
    */
   const HandleBlock = (item) => {
+    console.log(item);
     set(push(ref(db, "block/")), {
       blockbyId: auth.currentUser.uid,
       blockbyName: auth.currentUser.displayName,
       blockByEmail: auth.currentUser.email,
-      whoBlock: item.friendKey,
+      blockbyProfile_picture: auth.currentUser.photoURL,
+      whoBlock: item.senderUid,
       whoBlockName: item.senderName,
       whoBlockEmail: item.senderEmail,
+      whoBlockprofile_picture: item.profile_picture,
       createdAtDate: moment().format("MM/DD/YYYY, h:mm:ss a"),
     }).then(() => {
       remove(ref(db, "Friends/" + item.friendKey));
@@ -157,8 +159,7 @@ const Friends = () => {
                   class="mb-4 rounded-lg bg-blue-50 p-4 text-sm text-blue-800 dark:bg-gray-800 dark:text-blue-400"
                   role="alert"
                 >
-                  <span class="font-medium">Info alert!</span> No Friend
-                  Availavil here
+                  <span class="font-medium"></span> No Friend Availavil here
                 </div>
               </div>
             )}

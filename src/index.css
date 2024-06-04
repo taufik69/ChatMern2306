@@ -26,3 +26,13 @@
     text-decoration: none;
   }
 }
+
+.box {
+  width: 50% !important;
+  height: 222px !important;
+  overflow: hidden;
+}
+.img-preview {
+  width: 100% !important;
+  height: 100% !important;
+}

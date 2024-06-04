@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, createRef } from "react";
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import profilePicture from "../../../../assets/HomepageImage/one.gif";
 import profilePictur2 from "../../../../assets/HomepageImage/two.gif";
@@ -6,7 +6,11 @@ import profilePicture3 from "../../../../assets/HomepageImage/one.gif";
 import profilePicture4 from "../../../../assets/HomepageImage/two.gif";
 import Modal from "react-modal";
 import { ImCancelCircle } from "react-icons/im";
+import Cropper from "react-cropper";
+import "cropperjs/dist/cropper.css";
 
+const defaultSrc =
+  "https://raw.githubusercontent.com/roadmanfong/react-cropper/master/example/img/child.jpg";
 const customStyles = {
   content: {
     top: "50%",
@@ -15,12 +19,16 @@ const customStyles = {
     bottom: "auto",
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
-    width: "30%",
+    width: "45%",
+    height: "100%",
   },
 };
 
 const GroupList = () => {
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [image, setImage] = useState(defaultSrc);
+  const [cropData, setCropData] = useState("");
+  const cropperRef = createRef();
   function closeModal() {
     setIsOpen(false);
   }
@@ -69,6 +77,36 @@ const GroupList = () => {
       button: "join",
     },
   ];
+
+  /**
+   * todo : cropper funtionality
+   */
+  const onChange = (e) => {
+    e.preventDefault();
+    let files;
+    if (e.dataTransfer) {
+      files = e.dataTransfer.files;
+    } else if (e.target) {
+      files = e.target.files;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      setImage(reader.result);
+    };
+    reader.readAsDataURL(files[0]);
+  };
+
+  /**
+   * todo : cropimg functionality
+   */
+
+  const getCropData = () => {
+    if (typeof cropperRef.current?.cropper !== "undefined") {
+      setCropData(cropperRef.current?.cropper.getCroppedCanvas().toDataURL());
+    }
+  };
+  console.log(cropData);
+
   return (
     <div className="w-[34%]">
       <div className="my-5 flex items-center justify-between">
@@ -134,7 +172,7 @@ const GroupList = () => {
             <h1 className="flex justify-center py-8 font-Nunito text-3xl font-bold text-black">
               Group Information
             </h1>
-            <form action="#">
+            <form action="#" onSubmit={(e) => e.preventDefault()}>
               <div className="flex flex-col gap-y-3 ">
                 <label htmlFor="groupname">
                   GroupName{" "}
@@ -148,9 +186,10 @@ const GroupList = () => {
                   placeholder="Group Name"
                 />
               </div>
+
               <div className="flex flex-col gap-y-3 ">
                 <label htmlFor="groupname">
-                  Group TagName
+                  GroupTagName
                   <span className="align-text-top text-red-500">*</span>
                 </label>
                 <input
@@ -158,23 +197,51 @@ const GroupList = () => {
                   type="text"
                   id="groupname"
                   name="groupname"
-                  placeholder="Group TagName"
-                />
-              </div>
-              <div className="flex flex-col gap-y-3 ">
-                <label htmlFor="groupname">
-                  GrouPhoto
-                  <span className="align-text-top text-red-500">*</span>
-                </label>
-                <input
-                  className="border-[1px] border-gray-200 p-3"
-                  type="file"
-                  id="groupname"
-                  name="groupname"
                   placeholder="Group Name"
                 />
               </div>
-              <button className="bg-green-400 px-5 py-5">Create Group</button>
+
+              <div className="flex flex-col gap-y-3 ">
+                <label htmlFor="groupname">
+                  GroupPhoto
+                  <span className="align-text-top text-red-500">*</span>
+                </label>
+                <div className="flex items-center justify-between">
+                  <input type="file" onChange={onChange} />
+                  <button
+                    className="rounded-lg  bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-5 py-1 font-Poppins text-xl font-semibold text-white"
+                    onClick={getCropData}
+                  >
+                    Crop Image
+                  </button>
+                </div>
+                <div className="flex items-center justify-between gap-x-10">
+                  <div className="h-[222px] w-[50%]">
+                    <Cropper
+                      ref={cropperRef}
+                      style={{ height: "100%", width: "100%" }}
+                      zoomTo={0.5}
+                      initialAspectRatio={2}
+                      preview=".img-preview"
+                      src={image}
+                      viewMode={1}
+                      minCropBoxHeight={10}
+                      minCropBoxWidth={10}
+                      background={false}
+                      responsive={true}
+                      autoCropArea={1}
+                      checkOrientation={false} // https://github.com/fengyuanchen/cropperjs/issues/671
+                      guides={true}
+                    />
+                  </div>
+                  <div className="box">
+                    <div className="img-preview"></div>
+                  </div>
+                </div>
+              </div>
+              <button className="mt-5 w-full rounded-full bg-green-600 py-8 font-Nunito font-bold  text-white">
+                Create Group
+              </button>
             </form>
           </div>
         </div>

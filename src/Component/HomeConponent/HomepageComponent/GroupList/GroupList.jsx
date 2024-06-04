@@ -148,6 +148,33 @@ const GroupList = () => {
                   placeholder="Group Name"
                 />
               </div>
+              <div className="flex flex-col gap-y-3 ">
+                <label htmlFor="groupname">
+                  Group TagName
+                  <span className="align-text-top text-red-500">*</span>
+                </label>
+                <input
+                  className="border-[1px] border-gray-200 p-3"
+                  type="text"
+                  id="groupname"
+                  name="groupname"
+                  placeholder="Group TagName"
+                />
+              </div>
+              <div className="flex flex-col gap-y-3 ">
+                <label htmlFor="groupname">
+                  GrouPhoto
+                  <span className="align-text-top text-red-500">*</span>
+                </label>
+                <input
+                  className="border-[1px] border-gray-200 p-3"
+                  type="file"
+                  id="groupname"
+                  name="groupname"
+                  placeholder="Group Name"
+                />
+              </div>
+              <button className="bg-green-400 px-5 py-5">Create Group</button>
             </form>
           </div>
         </div>

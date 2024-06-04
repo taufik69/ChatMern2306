@@ -1,11 +1,15 @@
-import React, { useState } from "react";
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
-
 import profilePicture from "../../../../assets/HomepageImage/one.gif";
 import profilePictur2 from "../../../../assets/HomepageImage/two.gif";
 import profilePicture3 from "../../../../assets/HomepageImage/one.gif";
 import profilePicture4 from "../../../../assets/HomepageImage/two.gif";
 import Modal from "react-modal";
+import { ImCancelCircle } from "react-icons/im";
+import React, { useState, createRef } from "react";
+import Cropper, { ReactCropperElement } from "react-cropper";
+import "cropperjs/dist/cropper.css";
+const defaultSrc =
+  "https://raw.githubusercontent.com/roadmanfong/react-cropper/master/example/img/child.jpg";
 
 const customStyles = {
   content: {
@@ -15,18 +19,53 @@ const customStyles = {
     bottom: "auto",
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
-    width: "60%",
+    width: "30%",
   },
 };
+
 const GroupList = () => {
+  const [image, setImage] = useState(defaultSrc);
+  const [cropData, setCropData] = useState("#");
+  const cropperRef = createRef();
   const [modalIsOpen, setIsOpen] = useState(false);
+
+  const onChange = (e) => {
+    e.preventDefault();
+    let files;
+    if (e.dataTransfer) {
+      files = e.dataTransfer.files;
+    } else if (e.target) {
+      files = e.target.files;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      setImage(reader.result);
+    };
+    reader.readAsDataURL(files[0]);
+  };
+
+  const getCropData = () => {
+    if (typeof cropperRef.current?.cropper !== "undefined") {
+      setCropData(cropperRef.current?.cropper.getCroppedCanvas().toDataURL());
+    }
+  };
+
+  // modal functionality
+  function closeModal() {
+    setIsOpen(false);
+  }
   function openModal() {
     setIsOpen(true);
   }
 
-  function closeModal() {
-    setIsOpen(false);
-  }
+  /**
+   * futntion : HanldeOpenModal
+   *  @param: ({})
+   */
+
+  const HanldeOpenModal = () => {
+    openModal();
+  };
   const users = [
     {
       id: 1,
@@ -60,10 +99,27 @@ const GroupList = () => {
       button: "join",
     },
   ];
+
+  const [groupInput, setgroupInput] = useState({
+    groupname: "",
+    groupTagName: "",
+    groupPhoto: "",
+  });
+  // groupInputHandeler function
+  const groupInputHandeler = (e) => {
+    console.log(e.target.files[0].name);
+  };
+
   /**
    * todo : HandleGroup funtionlaity
    *
    */
+
+ 
+  const onCrop = () => {
+    const cropper = cropperRef.current?.cropper;
+    console.log(cropper.getCroppedCanvas().toDataURL());
+  };
 
   return (
     <div className="w-[34%]">
@@ -71,9 +127,8 @@ const GroupList = () => {
         <h1 className="font-Poppins text-xl font-semibold text-custom-black">
           Groups List
         </h1>
-
         <button
-          onClick={() => setIsOpen(true)}
+          onClick={HanldeOpenModal}
           type="button"
           className="relative inline-flex items-center rounded-lg bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-5 py-2.5 text-center text-sm font-medium text-white "
         >
@@ -113,67 +168,86 @@ const GroupList = () => {
         </div>
       </div>
 
+      {/* modal body  */}
       <Modal
         isOpen={modalIsOpen}
-        onRequestClose={closeModal}
         style={customStyles}
         contentLabel="Example Modal"
       >
-        <form class="mx-auto max-w-sm">
-          <div class="mb-5">
-            <label
-              for="email"
-              class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Your email
-            </label>
-            <input
-              type="email"
-              id="email"
-              class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              placeholder="name@flowbite.com"
-              required
-            />
-          </div>
-          <div class="mb-5">
-            <label
-              for="password"
-              class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Your password
-            </label>
-            <input
-              type="password"
-              id="password"
-              class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              required
-            />
-          </div>
-          <div class="mb-5 flex items-start">
-            <div class="flex h-5 items-center">
-              <input
-                id="remember"
-                type="checkbox"
-                value=""
-                class="focus:ring-3 h-4 w-4 rounded border border-gray-300 bg-gray-50 focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
-                required
-              />
-            </div>
-            <label
-              for="remember"
-              class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >
-              Remember me
-            </label>
-          </div>
+        <div className="">
           <button
-            type="submit"
-            class="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            onClick={() => closeModal()}
+            className="flex h-[34px]  w-[34px] items-center justify-center rounded-full  bg-red-500 text-center text-xl   text-white"
           >
-            Submit
+            <ImCancelCircle />
           </button>
-        </form>
+
+          <div>
+            <h1 className="flex justify-center py-8 font-Nunito text-3xl font-bold text-black">
+              Group Information
+            </h1>
+            <form action="#" onSubmit={(e) => e.preventDefault()}>
+              <div className="flex flex-col gap-y-3 ">
+                <label htmlFor="groupname">
+                  GroupName{" "}
+                  <span className="align-text-top text-red-500">*</span>
+                </label>
+                <input
+                  className="border-[1px] border-gray-200 p-3"
+                  type="text"
+                  id="groupname"
+                  name="groupname"
+                  placeholder="Group Name"
+                  // onChange={groupInputHandeler}
+                />
+              </div>
+              <div className="flex flex-col gap-y-3 ">
+                <label htmlFor="groupname">
+                  Group TagName
+                  <span className="align-text-top text-red-500">*</span>
+                </label>
+                <input
+                  className="border-[1px] border-gray-200 p-3"
+                  type="text"
+                  id="groupTagName"
+                  name="groupTagName"
+                  onChange={groupInputHandeler}
+                />
+              </div>
+              <div className="flex flex-col gap-y-3 ">
+                <label htmlFor="groupname">
+                  GrouPhoto
+                  <span className="align-text-top text-red-500">*</span>
+                </label>
+                <Cropper
+                  ref={cropperRef}
+                  style={{ height: 400, width: "100%" }}
+                  zoomTo={0.5}
+                  initialAspectRatio={1}
+                  preview=".img-preview"
+                  src={image}
+                  viewMode={1}
+                  minCropBoxHeight={10}
+                  minCropBoxWidth={10}
+                  background={false}
+                  responsive={true}
+                  autoCropArea={1}
+                  checkOrientation={false} // https://github.com/fengyuanchen/cropperjs/issues/671
+                  guides={true}
+                />
+              </div>
+              <button
+                className="bg-green-400 px-5 py-5"
+                // onClick={HanldeCreateGroup}
+              >
+                Create Group
+              </button>
+            </form>
+          </div>
+        </div>
       </Modal>
+
+      {/* modal body  */}
     </div>
   );
 };

@@ -1,7 +1,5 @@
-import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import React, { useEffect, useState } from "react";
-import { FaPlus } from "react-icons/fa6";
-
+import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import friend5 from "../../../../assets/HomepageImage/Friends/f5.png";
 import { toast, Slide } from "react-toastify";
 import moment from "moment/moment";
@@ -18,50 +16,48 @@ import { FaUser } from "react-icons/fa";
 const BlockUser = () => {
   const db = getDatabase();
   const auth = getAuth();
-  const [blockList, setblockList] = useState([]);
+  const [BlockList, setBlockList] = useState([]);
 
   /**
-   * todo : fetch all friend in friends database
-   *
+   * todo :  Fetch block listed user
+   * @param ({})
    */
+
   useEffect(() => {
     const friendsDbRef = ref(db, "block/");
     onValue(friendsDbRef, (snapshot) => {
-      let blockBlankArr = [];
+      let BlockListblankArr = [];
       snapshot.forEach((item) => {
-        // if (item.blockbyId == auth.currentUser.uid) {
-        // }
-        blockBlankArr.push({
-          ...item.val(),
-          BlockKey: item.key,
-        });
+        BlockListblankArr.push({ ...item.val(), blockUserkey: item.key });
       });
-      setblockList(() => {
-        return blockBlankArr.filter(
+      setBlockList(() => {
+        const filterItem = BlockListblankArr.filter(
           (item) => item.blockbyId === auth.currentUser.uid,
         );
+        return filterItem;
       });
     });
   }, []);
 
   /**
    * todo : handleUnblock funtionality implementation
-   * @param ({item})
+   * Motive : unblock user
+   * @params ({item})
    */
 
   const handleUnblock = (item) => {
     console.log(item);
     set(push(ref(db, "Friends/")), {
-      reciverEmail: item.blockByEmail,
-      reciverName: item.blockbyName,
-      reciverUid: item.blockbyId,
-      profile_picture: item.whoBlockProfile_picture,
+      senderUid: item.whoBlock,
       senderName: item.whoBlockName,
       senderEmail: item.whoBlockEmail,
-      senderUid: item.whoBlock,
+      reciverName: item.blockbyName,
+      reciverEmail: item.blockByEmail,
+      reciverUid: item.blockbyId,
+      profile_picture: item.whoBlockprofile_picture,
       createdAtDate: moment().format("MM/DD/YYYY, h:mm:ss a"),
     }).then(() => {
-      remove(ref(db, "block/" + item.BlockKey));
+      remove(ref(db, "block/" + item.blockUserkey));
       toast.info(`${item.whoBlockName} unBlocked`, {
         position: "top-left",
         autoClose: 5000,
@@ -87,7 +83,7 @@ const BlockUser = () => {
             >
               <FaUser className="mr-2 text-2xl" /> Block List
               <div className="absolute -end-2 -top-2 inline-flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-red-500 text-xs font-bold text-white dark:border-gray-900">
-                {blockList.length > 0 ? blockList.length : 0}
+                {BlockList.length > 0 ? BlockList.length : 0}
               </div>
             </button>
           </h1>
@@ -97,18 +93,18 @@ const BlockUser = () => {
         </div>
         <div className="h-[347px]  w-full overflow-y-scroll  rounded-xl shadow-xl scrollbar-thin  scrollbar-track-gray-400 scrollbar-thumb-sky-700">
           <div className=" divide-y-[1px] divide-gray-200">
-            {blockList.length > 0 ? (
-              blockList?.map((item) => (
+            {BlockList.length > 0 ? (
+              BlockList?.map((item) => (
                 <div
                   className="flex items-center justify-between px-7 py-5"
                   key={item.id}
                 >
                   <div className="relative h-[70px] w-[70px] cursor-pointer rounded-full bg-blue-200">
-                    {item.whoBlockProfile_picture ? (
+                    {item.whoBlockprofile_picture ? (
                       <picture>
                         <img
-                          src={item.whoBlockProfile_picture}
-                          alt={item.whoBlockProfile_picture}
+                          src={item.whoBlockprofile_picture}
+                          alt={item.whoBlockprofile_picture}
                           className="s-full h-full rounded-full object-cover shadow-lg"
                         />
                       </picture>
@@ -128,7 +124,9 @@ const BlockUser = () => {
                       {item.whoBlockName ? item.whoBlockName : "Name Xyz"}
                     </h1>
                     <p className="font-Poppins text-[18px] font-medium text-[#4D4D4D] opacity-75">
-                      {moment(item.createdAtDate).fromNow()}
+                      {moment(item.createdAtDate)
+                        ? moment(item.createdAtDate).fromNow()
+                        : "Yesterday, 6:22pm"}
                     </p>
                   </div>
 

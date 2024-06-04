@@ -43,14 +43,16 @@ const Friends = () => {
    * @params ({items})
    */
   const HandleBlock = (item) => {
+    console.log(item);
     set(push(ref(db, "block/")), {
       blockbyId: auth.currentUser.uid,
       blockbyName: auth.currentUser.displayName,
       blockByEmail: auth.currentUser.email,
+      blockbyProfile_picture: auth.currentUser.photoURL,
       whoBlock: item.senderUid,
       whoBlockName: item.senderName,
       whoBlockEmail: item.senderEmail,
-      whoBlockProfile_picture: item.profile_picture,
+      whoBlockprofile_picture: item.profile_picture,
       createdAtDate: moment().format("MM/DD/YYYY, h:mm:ss a"),
     }).then(() => {
       remove(ref(db, "Friends/" + item.friendKey));

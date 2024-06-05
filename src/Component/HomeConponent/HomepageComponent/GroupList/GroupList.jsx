@@ -8,7 +8,16 @@ import Modal from "react-modal";
 import { ImCancelCircle } from "react-icons/im";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
-
+import {
+  getStorage,
+  ref,
+  uploadString,
+  getDownloadURL,
+} from "firebase/storage";
+import { getDatabase, push, ref as dbRef, set } from "firebase/database";
+import { getAuth } from "firebase/auth";
+import { v4 as uuidv4 } from "uuid";
+import { fireToastSucess, fireToastError } from "../../../../Utils/Utils";
 const defaultSrc =
   "https://raw.githubusercontent.com/roadmanfong/react-cropper/master/example/img/child.jpg";
 const customStyles = {
@@ -25,9 +34,17 @@ const customStyles = {
 };
 
 const GroupList = () => {
+  const storage = getStorage();
+  const db = getDatabase();
+  const auth = getAuth();
   const [modalIsOpen, setIsOpen] = useState(false);
   const [image, setImage] = useState(defaultSrc);
-  const [cropData, setCropData] = useState("");
+  const [loading, setloading] = useState(false);
+  const [GroupInfo, setGroupinfo] = useState({
+    grouprTagName: "",
+    groupname: "",
+    groupPhoto: "",
+  });
   const cropperRef = createRef();
   function closeModal() {
     setIsOpen(false);
@@ -102,10 +119,81 @@ const GroupList = () => {
 
   const getCropData = () => {
     if (typeof cropperRef.current?.cropper !== "undefined") {
-      setCropData(cropperRef.current?.cropper.getCroppedCanvas().toDataURL());
+      setGroupinfo({
+        ...GroupInfo,
+        groupPhoto: cropperRef.current?.cropper.getCroppedCanvas().toDataURL(),
+      });
+      fireToastSucess("Image Croping Done", "top-right", 4000);
     }
   };
-  console.log(cropData);
+
+  /**
+   * todo : handleInput funcionality
+   * params ({event})
+   */
+
+  const handleInput = (event) => {
+    setGroupinfo({
+      ...GroupInfo,
+      [event.target.id]: event.target.value,
+    });
+  };
+  /*
+  
+   * todo : HandleGroup funtion implementaiton
+   * param: ({})
+   */
+  const HandleGroup = () => {
+    const { grouprTagName, groupname, groupPhoto } = GroupInfo;
+    if (!grouprTagName) {
+      fireToastError("GroupTag Name Missing", "top-center", 6000);
+    } else if (!groupname) {
+      fireToastError("GroupName Missing", "top-center", 6000);
+    } else if (!groupPhoto) {
+      fireToastError("groupPhotos Missing", "top-center", 6000);
+    } else {
+      setloading(true);
+      const storageRef = ref(storage, `GroupImages/images${uuidv4()}`);
+      // Data URL string
+      const photoBase64Url = groupPhoto;
+      uploadString(storageRef, photoBase64Url, "data_url")
+        .then((snapshot) => {
+          console.log("Uploaded a data_url string!", snapshot);
+        })
+        .then(() => {
+          getDownloadURL(storageRef).then((downloadURL) => {
+            set(push(dbRef(db, "GroupList/")), {
+              GroupName: groupname,
+              GroupTagName: grouprTagName,
+              GroupPhotUrl: downloadURL,
+              AdminId: auth.currentUser.uid,
+              AdminUserName: auth.currentUser.displayName,
+              AdminEmail: auth.currentUser.email,
+              AdminPhotUrl: auth.currentUser.photoURL,
+            })
+              .then(() => {
+                fireToastSucess(
+                  "Group Create Sucessfully ",
+                  "bottom-center",
+                  4000,
+                );
+              })
+              .catch((err) => {
+                fireToastError(err.message, "top-center", 3000);
+              })
+              .finally(() => {
+                setloading(false);
+                setGroupinfo({
+                  grouprTagName: "",
+                  groupname: "",
+                  groupPhoto: "",
+                });
+                closeModal();
+              });
+          });
+        });
+    }
+  };
 
   return (
     <div className="w-[34%]">
@@ -184,6 +272,7 @@ const GroupList = () => {
                   id="groupname"
                   name="groupname"
                   placeholder="Group Name"
+                  onChange={handleInput}
                 />
               </div>
 
@@ -195,9 +284,10 @@ const GroupList = () => {
                 <input
                   className="border-[1px] border-gray-200 p-3"
                   type="text"
-                  id="groupname"
-                  name="groupname"
-                  placeholder="Group Name"
+                  id="grouprTagName"
+                  name="grouprTagName"
+                  placeholder="Group TagName"
+                  onChange={handleInput}
                 />
               </div>
 
@@ -207,7 +297,12 @@ const GroupList = () => {
                   <span className="align-text-top text-red-500">*</span>
                 </label>
                 <div className="flex items-center justify-between">
-                  <input type="file" onChange={onChange} />
+                  <input
+                    type="file"
+                    id="groupPhoto"
+                    name="groupPhoto"
+                    onChange={onChange}
+                  />
                   <button
                     className="rounded-lg  bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-5 py-1 font-Poppins text-xl font-semibold text-white"
                     onClick={getCropData}
@@ -239,8 +334,11 @@ const GroupList = () => {
                   </div>
                 </div>
               </div>
-              <button className="mt-5 w-full rounded-full bg-green-600 py-8 font-Nunito font-bold  text-white">
-                Create Group
+              <button
+                className="mt-5 w-full rounded-full bg-green-600 py-8 font-Nunito font-bold  text-white"
+                onClick={HandleGroup}
+              >
+                {loading ? "loadign ...." : "Create Group"}
               </button>
             </form>
           </div>

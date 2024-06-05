@@ -20,7 +20,8 @@
     "react-router-dom": "^6.23.0",
     "react-toastify": "^10.0.5",
     "tailwind-scrollbar": "^3.1.0",
-    "uploader": "^3.48.3"
+    "uploader": "^3.48.3",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

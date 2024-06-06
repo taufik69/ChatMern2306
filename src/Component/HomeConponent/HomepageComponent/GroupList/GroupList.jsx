@@ -1,4 +1,4 @@
-import React, { useState, createRef } from "react";
+import React, { useState, createRef, useEffect } from "react";
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import profilePicture from "../../../../assets/HomepageImage/one.gif";
 import profilePictur2 from "../../../../assets/HomepageImage/two.gif";
@@ -8,13 +8,20 @@ import Modal from "react-modal";
 import { ImCancelCircle } from "react-icons/im";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
+import moment from "moment/moment";
 import {
   getStorage,
   ref,
   uploadString,
   getDownloadURL,
 } from "firebase/storage";
-import { getDatabase, push, ref as dbRef, set } from "firebase/database";
+import {
+  getDatabase,
+  push,
+  ref as dbRef,
+  set,
+  onValue,
+} from "firebase/database";
 import { getAuth } from "firebase/auth";
 import { v4 as uuidv4 } from "uuid";
 import { fireToastSucess, fireToastError } from "../../../../Utils/Utils";
@@ -40,11 +47,26 @@ const GroupList = () => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [image, setImage] = useState(defaultSrc);
   const [loading, setloading] = useState(false);
+  const [AllGroupList, setAllGroupList] = useState([]);
   const [GroupInfo, setGroupinfo] = useState({
     grouprTagName: "",
     groupname: "",
     groupPhoto: "",
   });
+  useEffect(() => {
+    const GroupDbRef = dbRef(db, "GroupList/");
+    onValue(GroupDbRef, (snapshot) => {
+      let GroupblankArr = [];
+      snapshot.forEach((item) => {
+        GroupblankArr.push({
+          ...item.val(),
+          GroupKey: item.key,
+        });
+      });
+      setAllGroupList(GroupblankArr);
+    });
+  }, []);
+
   const cropperRef = createRef();
   function closeModal() {
     setIsOpen(false);
@@ -170,6 +192,7 @@ const GroupList = () => {
               AdminUserName: auth.currentUser.displayName,
               AdminEmail: auth.currentUser.email,
               AdminPhotUrl: auth.currentUser.photoURL,
+              createdAtDate: moment().format("MM/DD/YYYY, h:mm:ss a"),
             })
               .then(() => {
                 fireToastSucess(
@@ -188,6 +211,7 @@ const GroupList = () => {
                   groupname: "",
                   groupPhoto: "",
                 });
+                setImage("");
                 closeModal();
               });
           });
@@ -199,7 +223,15 @@ const GroupList = () => {
     <div className="w-[34%]">
       <div className="my-5 flex items-center justify-between">
         <h1 className="font-Poppins text-xl font-semibold text-custom-black">
-          Groups List
+          <button
+            type="button"
+            className="relative inline-flex items-center rounded-lg bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-5 py-2.5 text-center text-sm font-medium text-white "
+          >
+            Groups
+            <div className="absolute -end-2 -top-2 inline-flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-red-500 text-xs font-bold text-white dark:border-gray-900">
+              {AllGroupList.length > 0 ? AllGroupList.length : 0}
+            </div>
+          </button>
         </h1>
         <button
           onClick={HanldeOpenModal}
@@ -211,30 +243,52 @@ const GroupList = () => {
       </div>
       <div className="mt-10 h-[347px]  w-full overflow-y-scroll  rounded-xl shadow-xl scrollbar-thin  scrollbar-track-gray-400 scrollbar-thumb-sky-700">
         <div className=" divide-y-[1px] divide-gray-200">
-          {users?.map((item) => (
-            <div className="flex items-center justify-between px-7 py-5">
-              <div className="h-[70px] w-[70px] cursor-pointer">
-                <picture>
-                  <img
-                    src={item.image}
-                    alt=""
-                    className="s-full h-full rounded-full object-cover shadow-lg"
-                  />
-                </picture>
+          {AllGroupList?.map((item) => (
+            <div
+              className="flex items-center justify-between px-7 py-5"
+              key={item.id}
+            >
+              <div className="relative h-[70px] w-[70px] cursor-pointer rounded-full bg-blue-200">
+                {item.GroupPhotUrl ? (
+                  <picture>
+                    <img
+                      src={item.GroupPhotUrl}
+                      alt={item.GroupPhotUrl}
+                      className="s-full h-full rounded-full object-cover shadow-lg"
+                    />
+                  </picture>
+                ) : (
+                  <picture>
+                    <img
+                      src={friend3}
+                      alt={friend3}
+                      className="s-full h-full rounded-full object-cover shadow-lg"
+                    />
+                  </picture>
+                )}
+                {item.active && (
+                  <span class="absolute bottom-1 right-1 flex h-4 w-4">
+                    <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
+                    <span class="relative inline-flex h-4 w-4 rounded-full bg-green-500"></span>
+                  </span>
+                )}
               </div>
 
-              <div className="flex w-[60%] flex-col items-center justify-center text-wrap   ">
-                <h1 className="font-Poppins text-lg font-semibold text-custom-black">
-                  {item.title}
+              <div className="flex w-[45%]  flex-col items-start justify-center text-wrap   ">
+                <h1 className="font-Poppins text-xl font-semibold text-custom-black">
+                  {item.GroupName ? item.GroupName : "Name Xyz"}
                 </h1>
-                <p className="font-Poppins text-[14px] font-medium text-[#4D4D4D] opacity-75">
-                  {item.description}
+                <p className="font-Poppins text-[18px] font-medium text-[#4D4D4D] opacity-75">
+                  {item.GroupTagName ? item.GroupTagName : "hello xyz"}
                 </p>
               </div>
 
               <div>
-                <button className="rounded-lg  bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-5 py-1 font-Poppins text-xl font-semibold text-white">
-                  {item.button}
+                <button
+                  type="button"
+                  className="relative inline-flex items-center rounded-lg bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-5 py-2.5 text-center text-sm font-medium text-white "
+                >
+                  Join
                 </button>
               </div>
             </div>
@@ -272,6 +326,7 @@ const GroupList = () => {
                   id="groupname"
                   name="groupname"
                   placeholder="Group Name"
+                  value={GroupInfo.groupname}
                   onChange={handleInput}
                 />
               </div>
@@ -288,6 +343,7 @@ const GroupList = () => {
                   name="grouprTagName"
                   placeholder="Group TagName"
                   onChange={handleInput}
+                  value={GroupInfo.grouprTagName}
                 />
               </div>
 

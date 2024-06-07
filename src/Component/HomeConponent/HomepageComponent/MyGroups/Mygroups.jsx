@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
+import { IoEllipsisVerticalCircleSharp } from "react-icons/io5";
 
 import friend3 from "../../../../assets/HomepageImage/Friends/f3.gif";
 
@@ -43,7 +44,7 @@ const Mygroups = () => {
   console.log(productId);
   return (
     <>
-      <div className="w-[30%]  self-start">
+      <div className="w-[30%] self-end">
         <div className="my-5 flex items-center justify-between ">
           <h1 className="font-Poppins text-xl font-semibold text-custom-black">
             <button
@@ -57,7 +58,7 @@ const Mygroups = () => {
             </button>
           </h1>
           <span>
-            <IoEllipsisVerticalSharp className="text-2xl text-btn-color" />
+            <IoEllipsisVerticalCircleSharp className="text-2xl text-btn-color" />
           </span>
         </div>
         <div className=" h-[347px] w-full  overflow-y-scroll  rounded-xl shadow-xl scrollbar-thin  scrollbar-track-gray-400 scrollbar-thumb-sky-700">

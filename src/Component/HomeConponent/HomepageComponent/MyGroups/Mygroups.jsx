@@ -40,7 +40,7 @@ const Mygroups = () => {
       setGroupList(GroupblankArr);
     });
   }, [auth.currentUser.uid, db]);
-  console.log(GroupList);
+
   return (
     <>
       <div className="w-[30%] self-end">

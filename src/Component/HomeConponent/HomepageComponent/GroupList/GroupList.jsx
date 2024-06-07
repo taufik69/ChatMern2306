@@ -1,9 +1,5 @@
 import React, { useState, createRef, useEffect } from "react";
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
-import profilePicture from "../../../../assets/HomepageImage/one.gif";
-import profilePictur2 from "../../../../assets/HomepageImage/two.gif";
-import profilePicture3 from "../../../../assets/HomepageImage/one.gif";
-import profilePicture4 from "../../../../assets/HomepageImage/two.gif";
 import Modal from "react-modal";
 import { ImCancelCircle } from "react-icons/im";
 import Cropper from "react-cropper";
@@ -58,10 +54,12 @@ const GroupList = () => {
     onValue(GroupDbRef, (snapshot) => {
       let GroupblankArr = [];
       snapshot.forEach((item) => {
-        GroupblankArr.push({
-          ...item.val(),
-          GroupKey: item.key,
-        });
+        if (item.val().AdminId !== auth.currentUser.uid) {
+          GroupblankArr.push({
+            ...item.val(),
+            GroupKey: item.key,
+          });
+        }
       });
       setAllGroupList(GroupblankArr);
     });
@@ -83,39 +81,6 @@ const GroupList = () => {
   const HanldeOpenModal = () => {
     openModal();
   };
-  const users = [
-    {
-      id: 1,
-      image: profilePicture,
-      title: "Friends Reunion",
-      description: "Hi Guys, Wassup!",
-      button: "Join",
-    },
-
-    {
-      id: 2,
-      image: profilePictur2,
-      title: "Friends Forever",
-      description: "Good to see you.",
-      button: "Join",
-    },
-
-    {
-      id: 3,
-      image: profilePicture3,
-      title: "Crazy Cousins",
-      description: "What plans today?",
-      button: "Join",
-    },
-
-    {
-      id: 4,
-      image: profilePicture4,
-      title: "Bechelor Hub",
-      description: "Lets Do Party",
-      button: "join",
-    },
-  ];
 
   /**
    * todo : cropper funtionality
@@ -219,6 +184,26 @@ const GroupList = () => {
     }
   };
 
+  /**
+   * todo : handleJoin funtion implement
+   * @param({})
+   */
+
+  const handleJoin = (item) => {
+    console.log(item);
+    set(push(dbRef(db, "GroupRequest/")), {
+      ...item,
+      whoWantToJoinGroupId: auth.currentUser.uid,
+      whoWantToJoinGroupName: auth.currentUser.displayName,
+      WhoWantToJoinGroupPhoto: auth.currentUser.photoURL,
+    }).then(() => {
+      fireToastSucess(
+        `${auth.currentUser.displayName} Want to Join Request Send To ${item.GroupName}`,
+        "top-right",
+      );
+    });
+  };
+
   return (
     <div className="w-[34%]">
       <div className="my-5 flex items-center justify-between">
@@ -236,7 +221,7 @@ const GroupList = () => {
         <button
           onClick={HanldeOpenModal}
           type="button"
-          className="relative inline-flex items-center rounded-lg bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-5 py-2.5 text-center text-sm font-medium text-white "
+          className="relative inline-flex  animate-bounce items-center rounded-lg bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-5 py-2.5 text-center text-sm font-medium text-white "
         >
           Create Group
         </button>
@@ -286,6 +271,7 @@ const GroupList = () => {
               <div>
                 <button
                   type="button"
+                  onClick={() => handleJoin(item)}
                   className="relative inline-flex items-center rounded-lg bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-5 py-2.5 text-center text-sm font-medium text-white "
                 >
                   Join

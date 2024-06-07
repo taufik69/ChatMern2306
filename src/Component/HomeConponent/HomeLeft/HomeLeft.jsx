@@ -136,7 +136,6 @@ const HomeLeft = () => {
               {userInfo.username &&
                 userInfo.username.slice(0, 1).toUpperCase() +
                   userInfo.username.slice(1, 6)}
-              ..
             </h1>
 
             <li

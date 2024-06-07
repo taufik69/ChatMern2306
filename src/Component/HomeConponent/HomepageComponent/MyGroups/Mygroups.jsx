@@ -43,7 +43,7 @@ const Mygroups = () => {
   console.log(productId);
   return (
     <>
-      <div className="w-[30%] self-end">
+      <div className="w-[30%]  self-start">
         <div className="my-5 flex items-center justify-between ">
           <h1 className="font-Poppins text-xl font-semibold text-custom-black">
             <button

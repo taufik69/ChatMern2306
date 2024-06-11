@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import { IoEllipsisVerticalCircleSharp } from "react-icons/io5";
 
 import friend3 from "../../../../assets/HomepageImage/Friends/f3.gif";
@@ -16,10 +15,12 @@ import {
 import { getAuth } from "firebase/auth";
 import moment from "moment";
 import { FaUser } from "react-icons/fa";
+
 const Mygroups = () => {
   const db = getDatabase();
   const auth = getAuth();
   const [GroupList, setGroupList] = useState([]);
+  const [GroupRequest, setGroupRequest] = useState([]);
 
   /**
    * todo : fetch all friend in friends database
@@ -41,7 +42,35 @@ const Mygroups = () => {
       setGroupList(GroupblankArr);
     });
   }, [auth.currentUser.uid, db]);
-  console.log(productId);
+
+  /**
+   * todo : fetch all friend in friends database
+   *
+   */
+
+  useEffect(() => {
+    const friendsDbRef = ref(db, "GroupRequest/");
+    onValue(friendsDbRef, (snapshot) => {
+      let GroupRequestblankArr = [];
+      snapshot.forEach((item) => {
+        if (item.val().AdminId === auth.currentUser.uid) {
+          GroupRequestblankArr.push(item.val().GroupKey);
+        }
+      });
+      setGroupRequest(GroupRequestblankArr);
+    });
+  }, [auth.currentUser.uid, db]);
+
+  /**
+   * todo : Accept Freiend Request
+   * @param({item})
+   *
+   */
+
+  const handleGroupAccept = (item) => {
+    console.log(item);
+  };
+
   return (
     <>
       <div className="w-[30%] self-end">
@@ -104,11 +133,25 @@ const Mygroups = () => {
                 </div>
 
                 <div>
-                  <p className="font-Poppins text-lg text-custom-black opacity-50">
-                    {moment(item.createdAtDate)
-                      ? moment(item.createdAtDate).fromNow()
-                      : "Today, 8:56pm"}
-                  </p>
+                  {GroupRequest.includes(item.GroupKey) ? (
+                    <div className="= flex flex-col gap-y-3">
+                      <button
+                        className="relative inline-flex items-center rounded-lg bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-5 py-2.5 text-center text-sm font-medium text-white "
+                        onClick={() => handleGroupAccept(item)}
+                      >
+                        Accept
+                      </button>
+                      <button className="relative inline-flex items-center rounded-lg bg-gradient-to-r from-[#f53aad] to-[#ab060b]  px-5 py-2.5 text-center text-sm font-medium text-white ">
+                        Reject
+                      </button>
+                    </div>
+                  ) : (
+                    <p className="font-Poppins text-lg text-custom-black opacity-50">
+                      {moment(item.createdAtDate)
+                        ? moment(item.createdAtDate).fromNow()
+                        : "Today, 8:56pm"}
+                    </p>
+                  )}
                 </div>
               </div>
             ))}

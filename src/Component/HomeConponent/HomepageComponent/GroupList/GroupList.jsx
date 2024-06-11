@@ -190,7 +190,6 @@ const GroupList = () => {
    */
 
   const handleJoin = (item) => {
-    console.log(item);
     set(push(dbRef(db, "GroupRequest/")), {
       ...item,
       whoWantToJoinGroupId: auth.currentUser.uid,

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
-import { IoEllipsisVerticalCircleSharp } from "react-icons/io5";
+
 
 import friend3 from "../../../../assets/HomepageImage/Friends/f3.gif";
 

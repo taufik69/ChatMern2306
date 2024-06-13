@@ -127,6 +127,7 @@ const Mygroups = () => {
       GroupjoinMemberPhoto: item.GroupPhotUrl,
       createdAtDate: moment().format("MM/DD/YYYY, h:mm:ss a"),
     }).then(() => {
+      remove(ref(db, "GroupRequest/" + item.groupRequestKey));
       closeModal();
       set(push(ref(db, "notification/")), {
         NotificationName: item.GroupName,
@@ -250,57 +251,89 @@ const Mygroups = () => {
         <hr className="mb-4" />
         <div>
           {GroupRquestItem?.map((item) => (
-            <div
-              className="flex items-center justify-between px-7 py-5"
-              key={item.id}
-            >
-              <div className="relative h-[70px] w-[70px] cursor-pointer rounded-full bg-blue-200">
-                {item.GroupPhotUrl ? (
-                  <picture>
-                    <img
-                      src={item.GroupPhotUrl}
-                      alt={item.GroupPhotUrl}
-                      className="s-full h-full rounded-full object-cover shadow-lg"
-                    />
-                  </picture>
-                ) : (
-                  <picture>
-                    <img
-                      src={friend3}
-                      alt={friend3}
-                      className="s-full h-full rounded-full object-cover shadow-lg"
-                    />
-                  </picture>
-                )}
-              </div>
+            <>
+              <div className="flex flex-col items-center justify-between px-7 py-5">
+                <div className="relative h-[70px] w-[70px] cursor-pointer rounded-full bg-blue-200">
+                  {item.WhoWantToJoinGroupPhoto ? (
+                    <picture>
+                      <img
+                        src={item.WhoWantToJoinGroupPhoto}
+                        alt={item.WhoWantToJoinGroupPhoto}
+                        className="s-full h-full rounded-full object-cover shadow-lg"
+                      />
+                    </picture>
+                  ) : (
+                    <picture>
+                      <img
+                        src={friend3}
+                        alt={friend3}
+                        className="s-full h-full rounded-full object-cover shadow-lg"
+                      />
+                    </picture>
+                  )}
+                </div>
 
-              <div className="flex w-[45%]  flex-col items-start justify-center text-wrap   ">
-                <h1 className="font-Poppins text-xl font-semibold text-custom-black">
-                  {item.GroupName ? item.GroupName : "Name Xyz"}
-                </h1>
-                <p className="font-Poppins text-[18px] font-medium text-[#4D4D4D] opacity-75">
-                  {item.GroupTagName ? item.GroupTagName : "hello xyz"}
-                </p>
-              </div>
-
-              <div>
-                <div className="flex  gap-x-3">
-                  <button
-                    className="relative inline-flex items-center rounded-lg bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-5 py-2.5 text-center text-sm font-medium text-white "
-                    onClick={() => acceptGroupRequest(item)}
-                  >
-                    Accept
-                  </button>
-
-                  <button
-                    className="relative inline-flex items-center rounded-lg bg-gradient-to-r from-[#a42a2a] to-[#4a5dab]  px-5 py-2.5 text-center text-sm font-medium text-white "
-                    onClick={() => handleJoinRequestRejected(item)}
-                  >
-                    Reject
-                  </button>
+                <div className="flex w-[95%]  flex-col items-center justify-center text-wrap   ">
+                  <h1 className="font-Poppins text-xl font-semibold text-custom-black">
+                    {item.whoWantToJoinGroupName
+                      ? `${item.whoWantToJoinGroupName} Wants to join ${item.GroupName}`
+                      : "Name Xyz"}
+                  </h1>
                 </div>
               </div>
-            </div>
+              <hr className="mb-4 mt-3" />
+              <div
+                className="flex items-center justify-between px-7 py-5"
+                key={item.id}
+              >
+                <div className="relative h-[70px] w-[70px] cursor-pointer rounded-full bg-blue-200">
+                  {item.GroupPhotUrl ? (
+                    <picture>
+                      <img
+                        src={item.GroupPhotUrl}
+                        alt={item.GroupPhotUrl}
+                        className="s-full h-full rounded-full object-cover shadow-lg"
+                      />
+                    </picture>
+                  ) : (
+                    <picture>
+                      <img
+                        src={friend3}
+                        alt={friend3}
+                        className="s-full h-full rounded-full object-cover shadow-lg"
+                      />
+                    </picture>
+                  )}
+                </div>
+
+                <div className="flex w-[45%]  flex-col items-start justify-center text-wrap   ">
+                  <h1 className="font-Poppins text-xl font-semibold text-custom-black">
+                    {item.GroupName ? item.GroupName : "Name Xyz"}
+                  </h1>
+                  <p className="font-Poppins text-[18px] font-medium text-[#4D4D4D] opacity-75">
+                    {item.GroupTagName ? item.GroupTagName : "hello xyz"}
+                  </p>
+                </div>
+
+                <div>
+                  <div className="flex  gap-x-3">
+                    <button
+                      className="relative inline-flex items-center rounded-lg bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-5 py-2.5 text-center text-sm font-medium text-white "
+                      onClick={() => acceptGroupRequest(item)}
+                    >
+                      Accept
+                    </button>
+
+                    <button
+                      className="relative inline-flex items-center rounded-lg bg-gradient-to-r from-[#a42a2a] to-[#4a5dab]  px-5 py-2.5 text-center text-sm font-medium text-white "
+                      onClick={() => handleJoinRequestRejected(item)}
+                    >
+                      Reject
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </>
           ))}
         </div>
       </Modal>

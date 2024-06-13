@@ -114,7 +114,6 @@ const Mygroups = () => {
    * @params({item})
    */
   const acceptGroupRequest = (item) => {
-    console.log(item);
     set(push(ref(db, "GroupMember/")), {
       AdminId: item.AdminId,
       AdminUserName: item.AdminUserName,

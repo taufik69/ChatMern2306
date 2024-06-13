@@ -44,6 +44,7 @@ const GroupList = () => {
   const [image, setImage] = useState(defaultSrc);
   const [loading, setloading] = useState(false);
   const [AllGroupList, setAllGroupList] = useState([]);
+  const [GroupRequest, setGroupRequest] = useState([]);
   const [GroupInfo, setGroupinfo] = useState({
     grouprTagName: "",
     groupname: "",
@@ -194,14 +195,44 @@ const GroupList = () => {
       ...item,
       whoWantToJoinGroupId: auth.currentUser.uid,
       whoWantToJoinGroupName: auth.currentUser.displayName,
-      WhoWantToJoinGroupPhoto: auth.currentUser.photoURL,
-    }).then(() => {
-      fireToastSucess(
-        `${auth.currentUser.displayName} Want to Join Request Send To ${item.GroupName}`,
-        "top-right",
-      );
-    });
+      WhoWantToJoinGroupPhoto:
+        auth.currentUser.photoURL && auth.currentUser.photoURL,
+      createdAtDate: moment().format("MM/DD/YYYY, h:mm:ss a"),
+    })
+      .then(() => {
+        fireToastSucess(
+          `${auth.currentUser.displayName} Want to Join Request Send To ${item.GroupName}`,
+          "top-right",
+        );
+      })
+      .then(() => {
+        set(push(dbRef(db, "notification/")), {
+          NotificationName: auth.currentUser.displayName,
+          NotificationNamePhoto: auth.currentUser.photoURL,
+          NotificationMessage: `${auth.currentUser.displayName} Send You a Group Join Request`,
+          createdAtDate: moment().format("MM/DD/YYYY, h:mm:ss a"),
+        });
+      });
   };
+
+  /**
+   * todo :GroupRequest database
+   */
+
+  useEffect(() => {
+    const GroupRequestDbRef = dbRef(db, "GroupRequest/");
+    onValue(GroupRequestDbRef, (snapshot) => {
+      let groupRequestblankArr = [];
+      snapshot.forEach((item) => {
+        if (item.val().whoWantToJoinGroupId === auth.currentUser.uid) {
+          groupRequestblankArr.push(
+            item.val().whoWantToJoinGroupId + item.val().GroupKey,
+          );
+        }
+      });
+      setGroupRequest(groupRequestblankArr);
+    });
+  }, [auth.currentUser.uid, db]);
 
   return (
     <div className="w-[34%]">
@@ -273,7 +304,9 @@ const GroupList = () => {
                   onClick={() => handleJoin(item)}
                   className="relative inline-flex items-center rounded-lg bg-gradient-to-r from-[#614385] to-[#4a5dab]  px-5 py-2.5 text-center text-sm font-medium text-white "
                 >
-                  Join
+                  {GroupRequest.includes(auth.currentUser.uid + item.GroupKey)
+                    ? "join Pending"
+                    : "join"}
                 </button>
               </div>
             </div>

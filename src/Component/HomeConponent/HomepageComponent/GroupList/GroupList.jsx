@@ -36,7 +36,7 @@ const customStyles = {
   },
 };
 
-const GroupList = () => {
+const GroupList = ({ isChat = false }) => {
   const storage = getStorage();
   const db = getDatabase();
   const auth = getAuth();
@@ -234,7 +234,7 @@ const GroupList = () => {
   }, [auth.currentUser.uid, db]);
 
   return (
-    <div className="w-[34%]">
+    <div className={`${isChat ? "w-full " : "w-[34%]"}`}>
       <div className="my-5 flex items-center justify-between">
         <h1 className="font-Poppins text-xl font-semibold text-custom-black">
           <button

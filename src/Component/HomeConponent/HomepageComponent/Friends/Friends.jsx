@@ -13,9 +13,12 @@ import {
 } from "firebase/database";
 import moment from "moment/moment";
 import { getAuth } from "firebase/auth";
+import { friendsAction } from "../../../../Features/Redux/FreindSlice/FriendSlice";
+import { useSelector, useDispatch } from "react-redux";
 const Friends = ({ isChat = false }) => {
   const db = getDatabase();
   const auth = getAuth();
+  const dispatch = useDispatch();
   const [friends, setfriends] = useState([]);
   /**
    * todo : fetch all friend in friends database
@@ -70,6 +73,15 @@ const Friends = ({ isChat = false }) => {
     });
   };
 
+  /**
+   * todo : handleSendMsg funtion implementation
+   * @parms({item})
+   *
+   */
+  const handleSendMsg = (item) => {
+    dispatch(friendsAction(item));
+  };
+
   return (
     <>
       <div className={`${isChat ? "w-full self-end" : "w-[30%] self-end"}`}>
@@ -96,6 +108,7 @@ const Friends = ({ isChat = false }) => {
                 <div
                   className="flex items-center justify-between px-7 py-5"
                   key={item.id}
+                  onClick={() => handleSendMsg(item)}
                 >
                   <div className="relative h-[70px] w-[70px] cursor-pointer rounded-full bg-blue-200">
                     {item.profile_picture ? (

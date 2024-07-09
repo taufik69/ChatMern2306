@@ -17,12 +17,8 @@ const ChatPage = () => {
   const [msg, setmsg] = useState("");
   const [singlemsg, setsinglemsg] = useState([]);
   const { Users } = useSelector((state) => state.Friends);
-  const whoRecivedMsgInfo = {
-    whoRecivedMsgName: Users.senderName,
-    whoRecivedMsgEmail: Users.senderEmail,
-    whoRecivedMsgUid: Users.senderUid,
-    whoRecivedMsgPhotoUrl: Users.profile_picture,
-  };
+
+  console.log(Users);
 
   /**
    * todo : handleChatmsg function implement
@@ -45,10 +41,8 @@ const ChatPage = () => {
       whoSendMsgName: auth.currentUser.displayName,
       WhoSendMsgUid: auth.currentUser.uid,
       WhoSendMsgPhotoUrl: auth.currentUser.photoURL,
-      whoRecivedMsgName: whoRecivedMsgInfo.whoRecivedMsgName,
-      WhoRecivedMsgEmail: whoRecivedMsgInfo.whoRecivedMsgEmail,
-      whoRecivedMsgUid: whoRecivedMsgInfo.whoRecivedMsgUid,
-      whoRecivedMsgPhotoUrl: whoRecivedMsgInfo.whoRecivedMsgPhotoUrl,
+      whoRecivedMsgName: Users.name,
+      whoRecivedMsgUid: Users.id,
       message: msg,
       createdAtDate: moment().format("MM/DD/YYYY, h:mm:ss a"),
     });
@@ -62,15 +56,19 @@ const ChatPage = () => {
     onValue(SingleMsgRef, (snapshot) => {
       let singlemsgArr = [];
       snapshot.forEach((item) => {
-        singlemsgArr.push({
-          ...item.val(),
-          singleMsgKey: item.key,
-        });
+        if (
+          auth.currentUser.uid == item.val().WhoSendMsgUid ||
+          auth.currentUser.uid == item.val().whoRecivedMsgUid
+        ) {
+          singlemsgArr.push({
+            ...item.val(),
+            singleMsgKey: item.key,
+          });
+        }
       });
       setsinglemsg(singlemsgArr);
     });
-  }, []);
-  console.log(singlemsg);
+  }, [Users]);
 
   return (
     <div className="p-5">
@@ -107,7 +105,7 @@ const ChatPage = () => {
 
                 <div className="flex   flex-col items-start justify-center text-wrap   ">
                   <h1 className="font-Poppins text-xl font-semibold text-custom-black">
-                    {Users.senderName ? Users.senderName : "Name Xyz"}
+                    {Users.name ? Users.name : "Name Xyz"}
                   </h1>
                   <p className="font-Poppins text-[18px] font-medium text-[#4D4D4D] opacity-75">
                     Online
@@ -121,8 +119,8 @@ const ChatPage = () => {
           </div>
           <div className="flex h-[75vh] flex-col overflow-y-scroll px-7 scrollbar-thin  scrollbar-track-gray-400 scrollbar-thumb-sky-700">
             {singlemsg?.map((item) =>
-              (auth.currentUser.uid && item.WhoSendMsgUid) ||
-              (item.whoRecivedMsgUid && auth.currentUser.uid) ? (
+              auth.currentUser.uid == item.WhoSendMsgUid &&
+              item.whoRecivedMsgUid == Users.id ? (
                 <div className=" mt-14 w-[30%] self-end">
                   <div className="msgRight flex items-center justify-center bg-blue-300 py-10">
                     <span>{item.message}</span>
@@ -130,12 +128,15 @@ const ChatPage = () => {
                   <span>{moment(item.createdAtDate).fromNow()}</span>
                 </div>
               ) : (
-                <div className=" mt-10 w-[30%] self-start ">
-                  <div className=" msgLeft  flex items-center justify-center rounded-xl bg-gray-300 py-10">
-                    <span>{item.message}</span>
+                auth.currentUser.uid == item.whoRecivedMsgUid &&
+                Users.id == item.WhoSendMsgUid && (
+                  <div className=" mt-10 w-[30%] self-start ">
+                    <div className=" msgLeft  flex items-center justify-center rounded-xl bg-gray-300 py-10">
+                      <span>{item.message}</span>
+                    </div>
+                    <span>{moment(item.createdAtDate).fromNow()}</span>
                   </div>
-                  <span>{moment(item.createdAtDate).fromNow()}</span>
-                </div>
+                )
               ),
             )}
           </div>

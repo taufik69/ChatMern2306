@@ -79,7 +79,12 @@ const Friends = ({ isChat = false }) => {
    *
    */
   const handleSendMsg = (item) => {
-    dispatch(friendsAction(item));
+    console.log(item);
+    if (auth.currentUser.uid == item.reciverUid) {
+      dispatch(friendsAction({ name: item.senderName, id: item.senderUid }));
+    } else {
+      dispatch(friendsAction({ name: item.reciverName, id: item.reciverUid }));
+    }
   };
 
   return (

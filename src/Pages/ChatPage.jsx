@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import friend1 from "../assets/HomepageImage/Friends/f2.gif";
 import Search from "../Component/HomeConponent/HomepageComponent/HomepageCommonComponent/Search.jsx";
 import GroupList from "../Component/HomeConponent/HomepageComponent/GroupList/GroupList.jsx";
@@ -12,21 +12,45 @@ import { getDatabase, push, ref, set, onValue } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import moment from "moment/moment";
 import EmojiPicker from "emoji-picker-react";
-
+import Modal from "react-modal";
+import { ImCancelCircle } from "react-icons/im";
 import ScrollToBottom from "react-scroll-to-bottom";
+import { imageUpload } from "../Utils/Uploader/ImageUpload.js";
+import {
+  getStorage,
+  ref as storageRef,
+  uploadBytesResumable,
+  getDownloadURL,
+  uploadString,
+} from "firebase/storage";
+import { v4 as uuidv4 } from "uuid";
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    width: "35%",
+    height: "50%",
+  },
+};
 
 const ChatPage = () => {
   const db = getDatabase();
   const auth = getAuth();
+  const [modalIsOpen, setIsOpen] = useState(false);
   const [msg, setmsg] = useState("");
   const [singlemsg, setsinglemsg] = useState([]);
-  const { Users } = useSelector((state) => state.Friends);
+  const [imageFile, setimageFile] = useState(null);
   const [openEmogi, setopenEmogi] = useState(false);
 
   /**
    * todo : handleChatmsg function implement
    * @param({event})
    */
+  const { Users } = useSelector((state) => state.Friends);
   const handleChatmsg = (event = {}) => {
     const { value } = event.target;
     setmsg(value);
@@ -80,6 +104,30 @@ const ChatPage = () => {
       return `${prevMsg} ${emojiData.emoji}`;
     });
   };
+  /**
+   * todo : HanleImageUpload funtiion implement
+   */
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  const onChangeInput = (e) => {
+    const files = Array.from(e.target.files);
+    setimageFile(files[0]);
+  };
+
+  /**
+   * todo uploadImage funtion implement
+   *
+   */
+  const uploadImage = () => {
+    // imageUpload(imageFile);
+  };
+
   return (
     <div className="p-5">
       <div className="flex">
@@ -174,7 +222,10 @@ const ChatPage = () => {
               >
                 <FaRegSmileBeam />
               </span>
-              <span className="cursor-pointer text-3xl">
+              <span
+                className="cursor-pointer text-3xl"
+                onClick={() => openModal()}
+              >
                 <FcMultipleCameras />
               </span>
             </div>
@@ -186,6 +237,52 @@ const ChatPage = () => {
               <LuSend />
             </span>
           </div>
+
+          {/* modal body  */}
+          <Modal
+            isOpen={modalIsOpen}
+            style={customStyles}
+            contentLabel="Example Modal"
+          >
+            <div className="">
+              <button
+                onClick={() => closeModal()}
+                className="flex h-[34px]  w-[34px] items-center justify-center rounded-full  bg-red-500 text-center text-xl   text-white"
+              >
+                <ImCancelCircle />
+              </button>
+
+              <div>
+                <h1 className="flex justify-center py-8 font-Nunito text-3xl font-bold text-black">
+                  Upload Image
+                </h1>
+                <form action="#" onSubmit={(e) => e.preventDefault()}>
+                  <div className="flex flex-col gap-y-3 ">
+                    <label htmlFor="groupname">
+                      Image Upload
+                      <span className="align-text-top text-red-500">*</span>
+                    </label>
+                    <div className="flex items-center justify-between">
+                      <input
+                        type="file"
+                        id="groupPhoto"
+                        name="groupPhoto"
+                        onChange={onChangeInput}
+                      />
+                    </div>
+                  </div>
+                  <button
+                    onClick={uploadImage}
+                    className="mt-10 w-full rounded-full bg-green-600 py-3 font-Nunito font-bold  text-white"
+                  >
+                    Upload
+                  </button>
+                </form>
+              </div>
+            </div>
+          </Modal>
+
+          {/* modal body  */}
         </div>
       </div>
     </div>

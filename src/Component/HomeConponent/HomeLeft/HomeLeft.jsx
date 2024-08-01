@@ -11,16 +11,20 @@ import { Uploader } from "uploader";
 import { getAuth, onAuthStateChanged, updateProfile } from "firebase/auth";
 import { getDatabase, ref, onValue, update } from "firebase/database";
 import { toast, Bounce } from "react-toastify";
+import { useSelector, useDispatch } from "react-redux";
+import { NotificationCounter } from "../../../Features/Redux/FreindSlice/FriendSlice";
 
 const HomeLeft = () => {
   const auth = getAuth();
   const db = getDatabase();
   const location = useLocation();
+  const dispatch = useDispatch();
   const [userInfo, setuserInfo] = useState({});
   let active = location.pathname.split("/")[1];
   const uploader = Uploader({
     apiKey: "free",
   });
+  const { NotificationCount } = useSelector((state) => state.Friends);
 
   // Get a users information using AuthProver
 
@@ -87,6 +91,11 @@ const HomeLeft = () => {
       .catch((err) => {
         console.error(err);
       });
+  };
+
+  // handleNotificationShow
+  const handleNotificationShow = () => {
+    dispatch(NotificationCounter(0));
   };
 
   return (
@@ -174,16 +183,21 @@ const HomeLeft = () => {
               className={
                 active === "notification"
                   ? " relative ml-5 flex w-[160%] cursor-pointer items-center justify-center rounded-l-lg  bg-white  py-4 after:absolute after:right-0 after:top-0 after:h-full after:w-3 after:rounded-l-lg after:bg-btn-color"
-                  : "cursor-pointer"
+                  : "relative cursor-pointer "
               }
             >
-              <Link to={"/notification"}>
+              <Link to={"/notification"} onMouseEnter={handleNotificationShow}>
                 <img
                   src={bell}
                   alt={bell}
                   className="h-[50px] w-[50px] text-[#BAD1FF]"
                 />
               </Link>
+              {NotificationCount !== 0 && (
+                <span className="absolute left-[27px] top-[-14px] flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-red-400 text-2xl text-white ">
+                  {NotificationCount && NotificationCount}
+                </span>
+              )}
             </li>
 
             <li

@@ -3,9 +3,12 @@ import img from "../../assets/HomepageImage/Friends/f3.gif";
 import { getDatabase, ref, onValue } from "firebase/database";
 import moment from "moment/moment";
 import { getAuth } from "firebase/auth";
+import { NotificationCounter } from "../../Features/Redux/FreindSlice/FriendSlice";
+import { useDispatch } from "react-redux";
 const Notification = () => {
   const db = getDatabase();
   const auth = getAuth();
+  const dispatch = useDispatch();
   const [notification, setnotification] = useState([]);
   /**
    * todo : fetch all friend in friends database
@@ -24,6 +27,16 @@ const Notification = () => {
       setnotification(notificationblankArr);
     });
   }, []);
+  const presentCount = (totalNotification) => {
+    let presentValue = totalNotification;
+    return (currentValue) => {
+      return currentValue - presentValue;
+    };
+  };
+
+  const pcount = presentCount(notification.length);
+  console.log(pcount(10));
+  // dispatch(NotificationCounter(previousCount.length));
 
   return (
     <div className="mt-10 flex h-[79vh] flex-col  items-stretch justify-start gap-y-10 overflow-y-scroll">

@@ -15,15 +15,7 @@ import EmojiPicker from "emoji-picker-react";
 import Modal from "react-modal";
 import { ImCancelCircle } from "react-icons/im";
 import ScrollToBottom from "react-scroll-to-bottom";
-import { imageUpload } from "../Utils/Uploader/ImageUpload.js";
-import {
-  getStorage,
-  ref as storageRef,
-  uploadBytesResumable,
-  getDownloadURL,
-  uploadString,
-} from "firebase/storage";
-import { v4 as uuidv4 } from "uuid";
+
 const customStyles = {
   content: {
     top: "50%",

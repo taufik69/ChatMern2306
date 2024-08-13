@@ -2,11 +2,11 @@ import React from "react";
 import LoginImg from "../../../assets/Login.jpg";
 const LoginRight = () => {
   return (
-    <div>
+    <>
       <picture>
-        <img src={LoginImg} alt={LoginImg} className="w-full h-auto" />
+        <img src={LoginImg} alt={LoginImg} className="h-screen w-full" />
       </picture>
-    </div>
+    </>
   );
 };
 

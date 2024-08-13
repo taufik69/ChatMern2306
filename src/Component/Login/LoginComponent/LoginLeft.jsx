@@ -108,7 +108,6 @@ const LoginLeft = () => {
           profile_picture: photoUrl,
         })
           .then(() => {
-            console.log("data uploaded done on realtime db");
             navigate("/");
           })
           .catch((err) => {

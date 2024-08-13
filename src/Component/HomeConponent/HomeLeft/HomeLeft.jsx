@@ -6,9 +6,14 @@ import bell from "../../../assets/homeLeft/bell.gif";
 import profilePic from "../../../assets/homeLeft/profilePic.gif";
 import { IoSettingsOutline } from "react-icons/io5";
 import { CiLogout } from "react-icons/ci";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Uploader } from "uploader";
-import { getAuth, onAuthStateChanged, updateProfile } from "firebase/auth";
+import {
+  getAuth,
+  onAuthStateChanged,
+  updateProfile,
+  signOut,
+} from "firebase/auth";
 import { getDatabase, ref, onValue, update } from "firebase/database";
 import { toast, Bounce } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
@@ -19,6 +24,7 @@ const HomeLeft = () => {
   const db = getDatabase();
   const location = useLocation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [userInfo, setuserInfo] = useState({});
   let active = location.pathname.split("/")[1];
   const uploader = Uploader({
@@ -96,6 +102,16 @@ const HomeLeft = () => {
   // handleNotificationShow
   const handleNotificationShow = () => {
     dispatch(NotificationCounter(0));
+  };
+
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        navigate("/login");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -212,7 +228,7 @@ const HomeLeft = () => {
               </Link>
             </li>
 
-            <li className="mt-16 cursor-pointer">
+            <li className="mt-16 cursor-pointer" onClick={handleLogout}>
               <CiLogout className="h-[50px] w-[50px] animate-pulse font-black text-[#BAD1FF]" />
             </li>
           </ul>

@@ -4,20 +4,32 @@ import { FiHelpCircle } from "react-icons/fi";
 import { HiOutlinePencilSquare } from "react-icons/hi2";
 import { MdPhotoAlbum } from "react-icons/md";
 import { getDatabase, ref, onValue, update } from "firebase/database";
-import { getAuth, onAuthStateChanged, updateProfile } from "firebase/auth";
+import { getAuth } from "firebase/auth";
+
+import {
+  getStorage,
+  ref as storageRef,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
 import ModalBody from "./Modal.jsx";
 import UsernameUpdate from "./UsernameUpdate.jsx";
+import ProfilePhoto from "./ProfilePhot.jsx";
 
-const SettingsLeftBottom = ({ ongetUserInfo }) => {
+const SettingsLeftBottom = () => {
   const db = getDatabase();
   const auth = getAuth();
+  const storage = getStorage();
   const [currentUser, setcurrentUser] = useState({});
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [updatepp, setupdatepp] = useState("");
   const [usernameInput, setusernameInput] = useState(
     auth.currentUser.displayName || "",
   );
+  const [progress, setprogress] = useState(0);
 
-  function openModal() {
+  function openModal(updateProfilePicture) {
+    setupdatepp(updateProfilePicture);
     setIsOpen(true);
   }
 
@@ -37,7 +49,6 @@ const SettingsLeftBottom = ({ ongetUserInfo }) => {
           setcurrentUser({ ...item.val(), userKey: item.key });
       });
     });
-    ongetUserInfo(currentUser);
   }, []);
   /**
    *todo : take a user INput
@@ -69,9 +80,48 @@ const SettingsLeftBottom = ({ ongetUserInfo }) => {
     } catch (error) {
       console.warn(error);
     } finally {
-      console.log("lskadj");
       closeModal();
     }
+  };
+
+  /**
+   * todo : update profile picture
+   * @param({userId})
+   * *function : handleChnageProfilePicture
+   */
+  console.log(currentUser);
+
+  const handleChnageProfilePicture = (updatedRawImage) => {
+    // Upload file and metadata to the object 'images/mountains.jpg'
+    const profilePictureRef = storageRef(
+      storage,
+      "profilePicture/" + updatedRawImage.name,
+    );
+    const uploadTask = uploadBytesResumable(profilePictureRef, updatedRawImage);
+
+    // start uploading and downloadin
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setprogress(progress);
+      },
+      (error) => {
+        console.log(error.code);
+      },
+      () => {
+        closeModal();
+        setprogress(0);
+
+        // Upload completed successfully, now we can get the download URL
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          const userRef = ref(db, `users/${currentUser.userKey}`);
+          update(userRef, {
+            profile_picture: downloadURL,
+          });
+        });
+      },
+    );
   };
 
   return (
@@ -79,7 +129,7 @@ const SettingsLeftBottom = ({ ongetUserInfo }) => {
       <div className="flex flex-col gap-y-8 px-12">
         <div
           className="flex cursor-pointer items-center space-x-2"
-          onClick={openModal}
+          onClick={() => openModal("")}
         >
           <span>
             <HiOutlinePencilSquare className="text-3xl" />
@@ -98,7 +148,10 @@ const SettingsLeftBottom = ({ ongetUserInfo }) => {
           </p>
         </div>
 
-        <div className="flex cursor-pointer items-center space-x-2">
+        <div
+          className="flex cursor-pointer items-center space-x-2"
+          onClick={() => openModal("updateProfilePicture")}
+        >
           <span>
             <MdPhotoAlbum className="text-3xl" />
           </span>
@@ -115,12 +168,19 @@ const SettingsLeftBottom = ({ ongetUserInfo }) => {
         </div>
       </div>
       <ModalBody onOpenModal={modalIsOpen} oncloseModal={closeModal}>
-        <UsernameUpdate
-          onUpadateUserName={upadateUserName}
-          onupdateUserInfoInput={updateUserInfoInput}
-          onusernameInput={usernameInput}
-          onfoucsHanlde={onfoucsHanlde}
-        />
+        {updatepp == "" ? (
+          <UsernameUpdate
+            onUpadateUserName={upadateUserName}
+            onupdateUserInfoInput={updateUserInfoInput}
+            onusernameInput={usernameInput}
+            onfoucsHanlde={onfoucsHanlde}
+          />
+        ) : (
+          <ProfilePhoto
+            onhandleChnageProfilePicture={handleChnageProfilePicture}
+            progresBar={progress}
+          />
+        )}
       </ModalBody>
     </>
   );

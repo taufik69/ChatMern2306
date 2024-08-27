@@ -15,7 +15,13 @@ import EmojiPicker from "emoji-picker-react";
 import Modal from "react-modal";
 import { ImCancelCircle } from "react-icons/im";
 import ScrollToBottom from "react-scroll-to-bottom";
-
+import {
+  getStorage,
+  ref as ourStorageREf,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
+import { v4 as uuidv4 } from "uuid";
 const customStyles = {
   content: {
     top: "50%",
@@ -37,6 +43,7 @@ const ChatPage = () => {
   const [singlemsg, setsinglemsg] = useState([]);
   const [imageFile, setimageFile] = useState(null);
   const [openEmogi, setopenEmogi] = useState(false);
+  const storage = getStorage();
 
   /**
    * todo : handleChatmsg function implement
@@ -65,6 +72,7 @@ const ChatPage = () => {
       whoRecivedMsgUid: Users.id,
       whoRecivedMsgPhotoUrl: Users.profile_picture,
       message: msg,
+      Image: "",
       createdAtDate: moment().format("MM/DD/YYYY, h:mm:ss a"),
     });
   };
@@ -117,7 +125,50 @@ const ChatPage = () => {
    *
    */
   const uploadImage = () => {
-    // imageUpload(imageFile);
+    const storageRef = ourStorageREf(
+      storage,
+      "singleImage/" + `${uuidv4().split("-")?.join("")}_${imageFile?.name} `,
+    );
+    const uploadTask = uploadBytesResumable(storageRef, imageFile);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is " + progress + "% done");
+      },
+      (error) => {
+        console.log(error);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref)
+          .then((downloadURL) => {
+            return downloadURL;
+          })
+          .then((downloadURL) => {
+            const singleMsgRef = ref(db, "SingleMsg");
+            set(push(singleMsgRef), {
+              whoSendMsgEmail: auth.currentUser.email,
+              whoSendMsgName: auth.currentUser.displayName,
+              WhoSendMsgUid: auth.currentUser.uid,
+              WhoSendMsgPhotoUrl: auth.currentUser.photoURL,
+              whoRecivedMsgName: Users.name,
+              whoRecivedMsgUid: Users.id,
+              whoRecivedMsgPhotoUrl: Users.profile_picture,
+              message: "",
+              Image: downloadURL,
+              createdAtDate: moment().format("MM/DD/YYYY, h:mm:ss a"),
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+          .finally(() => {
+            closeModal();
+          });
+      },
+    );
   };
 
   return (
@@ -172,22 +223,47 @@ const ChatPage = () => {
               {singlemsg?.map((item) =>
                 auth.currentUser.uid == item.WhoSendMsgUid &&
                 item.whoRecivedMsgUid == Users.id ? (
-                  <div className=" mt-14 w-[30%] self-end">
-                    <div className="msgRight flex items-center justify-center bg-blue-300 py-10">
-                      <span>{item.message}</span>
+                  item?.Image ? (
+                    <div className=" mt-14 w-[30%] self-end">
+                      <div className="  flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500  to-90% p-2">
+                        <img
+                          src={item.Image}
+                          alt={item.Image}
+                          className="h-full w-full rounded-xl object-cover"
+                        />
+                      </div>
+                      <span>{moment(item.createdAtDate).fromNow()}</span>
                     </div>
-                    <span>{moment(item.createdAtDate).fromNow()}</span>
-                  </div>
-                ) : (
-                  auth.currentUser.uid == item.whoRecivedMsgUid &&
-                  Users.id == item.WhoSendMsgUid && (
-                    <div className=" mt-10 w-[30%] self-start ">
-                      <div className=" msgLeft  flex items-center justify-center rounded-xl bg-gray-300 py-10">
+                  ) : (
+                    <div className=" mt-14 w-[30%] self-end">
+                      <div className="msgRight flex items-center justify-center bg-blue-300 py-10">
                         <span>{item.message}</span>
                       </div>
                       <span>{moment(item.createdAtDate).fromNow()}</span>
                     </div>
                   )
+                ) : (
+                  auth.currentUser.uid == item.whoRecivedMsgUid &&
+                  Users.id == item.WhoSendMsgUid &&
+                  (item?.Image ? (
+                    <div className=" mt-14 w-[30%] self-start">
+                      <div className="flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500  to-90% p-2">
+                        <img
+                          src={item.Image}
+                          alt={item.Image}
+                          className="h-full w-full rounded-xl object-cover"
+                        />
+                      </div>
+                      <span>{moment(item.createdAtDate).fromNow()}</span>
+                    </div>
+                  ) : (
+                    <div className=" mt-10 w-[30%] self-start ">
+                      <div className="msgLeft  flex items-center justify-center rounded-xl bg-gray-300 py-10">
+                        <span>{item.message}</span>
+                      </div>
+                      <span>{moment(item.createdAtDate).fromNow()}</span>
+                    </div>
+                  ))
                 ),
               )}
             </div>
